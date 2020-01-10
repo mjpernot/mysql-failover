@@ -57,7 +57,7 @@
             port = PORT_NUMBER
             cfg_file DIRECTORY_PATH/my.cnf
             sid = SERVER_ID
-            extra_def_file = "DIRECTORY_PATH/mysql.cfg"
+            extra_def_file = DIRECTORY_PATH/mysql.cfg
 
         NOTE 1:  Include the cfg_file even if running remotely as the file will
             be used in future releases.
