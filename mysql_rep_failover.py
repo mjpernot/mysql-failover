@@ -47,8 +47,8 @@
         NOTE 2:  -F, -G, -B, and -D are XOR arguments.
 
     Notes:
-        Slave(s) configuration file format (filename.txt)
-            # Slave 1 configuration {Database Name/Server}
+        Slave configuration file format (slave.txt.TEMPLATE)
+            # Slave configuration
             user = root
             passwd = ROOT_PASSWORD
             host = IP_ADDRESS
@@ -57,11 +57,24 @@
             port = PORT_NUMBER
             cfg_file DIRECTORY_PATH/my.cnf
             sid = SERVER_ID
-            # Slave N configuration {Database Name/Server}
-               Repeat rest of above section for Slave 1.
+            extra_def_file = "DIRECTORY_PATH/mysql.cfg"
 
-        NOTE:  Include the cfg_file even if running remotely as the file
-            will be used in future releases.
+        NOTE 1:  Include the cfg_file even if running remotely as the file will
+            be used in future releases.
+
+        NOTE 2:  In MySQL 5.6 - it now gives warning if password is passed on
+            the command line.  To suppress this warning, will require the use
+            of the --defaults-extra-file option (i.e. extra_def_file) in the
+            database configuration file.  See below for the defaults-extra-file
+            format.
+
+        Defaults Extra File format (mysql.cfg.TEMPLATE):
+            [client]
+            password="ROOT_PASSWORD"
+            socket="DIRECTORY_PATH/mysql.sock"
+
+        NOTE:  The socket information can be obtained from the my.cnf
+            file under ~/mysql directory.
 
     Example:
         mysql_rep_failover.py -s slaves.txt -d config -F
@@ -80,7 +93,6 @@ import lib.cmds_gen as cmds_gen
 import mysql_lib.mysql_libs as mysql_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -108,8 +120,6 @@ def show_slave_delays(SLAVES, args_array, **kwargs):
     Arguments:
         (input) SLAVES -> Slave instance array.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
         (output) True|False -> if an error has occurred.
         (output) -> Error message.
 
@@ -135,8 +145,6 @@ def show_best_slave(SLAVES, args_array, **kwargs):
     Arguments:
         (input) SLAVES -> Slave instance array.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
         (output) True|False -> if an error has occurred.
         (output) -> Error message.
 
@@ -162,8 +170,6 @@ def promote_designated_slave(SLAVES, args_array, **kwargs):
     Arguments:
         (input) SLAVES -> Slave instance array.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
 
@@ -205,8 +211,6 @@ def order_slaves_on_gtid(SLAVES, **kwargs):
 
     Arguments:
         (input) SLAVES -> Slave instance array.
-        (input) **kwargs:
-            None
         (output) slave_list -> List of slaves in best order.
 
     """
@@ -235,8 +239,6 @@ def promote_best_slave(SLAVES, args_array, **kwargs):
     Arguments:
         (input) SLAVES -> Slave instance array.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
 
@@ -273,8 +275,6 @@ def create_instances(args_array, **kwargs):
 
     Arguments:
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
         (output) SLAVE -> Slave instance array.
 
     """
@@ -298,8 +298,6 @@ def gtid_enabled(SLAVES, **kwargs):
 
     Arguments:
         (input) SLAVES -> Slave instance array.
-        (input) **kwargs:
-            None
         (output) True|False - If all slaves are GTID enabled.
 
     """
@@ -323,8 +321,6 @@ def run_program(args_array, func_dict, **kwargs):
     Arguments:
         (input) args_array -> Array of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
-        (input) **kwargs:
-            None
 
     """
 
