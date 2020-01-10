@@ -162,6 +162,7 @@ cd {Python_Project}/mysql-failover
 test/unit/mysql_rep_failover/help_message.py
 test/unit/mysql_rep_failover/main.py
 test/unit/mysql_rep_failover/run_program.py
+test/unit/mysql_rep_failover/show_slave_delays.py
 ```
 
 ### All unit testing
