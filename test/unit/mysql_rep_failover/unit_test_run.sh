@@ -7,4 +7,5 @@
 echo ""
 echo "Unit testing..."
 test/unit/mysql_rep_failover/help_message.py
+test/unit/mysql_rep_failover/show_best_slave.py
 test/unit/mysql_rep_failover/show_slave_delays.py
