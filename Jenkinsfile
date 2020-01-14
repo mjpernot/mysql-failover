@@ -22,6 +22,7 @@ pipeline {
                 source test_env/bin/activate
                 pip2 install mock==2.0.0 --user
                 pip2 install mysql-connector-python==8.0.16 --user
+                ./test/unit/mysql_rep_failover/create_instances.py
                 ./test/unit/mysql_rep_failover/help_message.py
                 ./test/unit/mysql_rep_failover/promote_best_slave.py
                 ./test/unit/mysql_rep_failover/order_slaves_on_gtid.py
