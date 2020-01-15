@@ -122,10 +122,9 @@ class UnitTest(unittest.TestCase):
 
         mock_order.return_value = []
 
-        #with gen_libs.no_std_out():
+        # with gen_libs.no_std_out():
         self.assertEqual(mysql_rep_failover.show_slave_delays(
             [], self.args_array), (False, None))
-
 
     @mock.patch("mysql_rep_failover.order_slaves_on_gtid")
     def test_one_slave(self, mock_order):

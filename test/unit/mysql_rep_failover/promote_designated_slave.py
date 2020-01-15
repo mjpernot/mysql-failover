@@ -209,7 +209,6 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_designated_slave(
             [], self.args_array), (False, None))
 
-
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
     def test_one_slave(self, mock_switch):
 

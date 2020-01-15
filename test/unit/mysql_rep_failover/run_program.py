@@ -39,7 +39,7 @@ def show_slave_delays(slaves, args_array):
 
     """Method:  show_slave_delays
 
-    Description:  Stub holder for mysql_rep_failover.show_slave_delays function.
+    Description:  Stub holder for mysql_rep_failover.show_slave_delays func.
 
     Arguments:
         (input) slaves -> List of slave connections.

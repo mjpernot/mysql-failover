@@ -97,9 +97,9 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mysql_rep_failover.main())
 
     @unittest.skip("Not yet implemented")
-    #@mock.patch(
-    #    "mysql_rep_failover.gen_class.ProgramLock",
-    #    mock.Mock(
+    # @mock.patch(
+    #     "mysql_rep_failover.gen_class.ProgramLock",
+    #     mock.Mock(
     #        side_effect=mysql_rep_failover.gen_class.SingleInstanceException))
     @mock.patch("mysql_rep_failover.run_program", mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.gen_libs.help_func")

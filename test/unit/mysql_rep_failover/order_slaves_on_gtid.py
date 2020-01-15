@@ -147,7 +147,6 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(mysql_rep_failover.order_slaves_on_gtid([]), [])
 
-
     def test_one_slave(self):
 
         """Function:  test_one_slave
