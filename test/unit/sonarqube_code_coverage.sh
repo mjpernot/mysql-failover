@@ -14,6 +14,7 @@ coverage run -a --source=mysql_rep_failover test/unit/mysql_rep_failover/help_me
 coverage run -a --source=mysql_rep_failover test/unit/mysql_rep_failover/order_slaves_on_gtid.py
 coverage run -a --source=mysql_rep_failover test/unit/mysql_rep_failover/promote_best_slave.py
 coverage run -a --source=mysql_rep_failover test/unit/mysql_rep_failover/promote_designated_slave.py
+coverage run -a --source=mysql_rep_failover test/unit/mysql_rep_failover/run_program.py
 coverage run -a --source=mysql_rep_failover test/unit/mysql_rep_failover/show_best_slave.py
 coverage run -a --source=mysql_rep_failover test/unit/mysql_rep_failover/show_slave_delays.py
 
