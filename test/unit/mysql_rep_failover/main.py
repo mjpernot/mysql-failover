@@ -48,12 +48,10 @@ class UnitTest(unittest.TestCase):
         test_programlock_true -> Test with ProgramLock returns True.
         test_arg_dir_chk_crt_false -> Test arg_dir_chk_crt if returns false.
         test_arg_dir_chk_crt_true -> Test arg_dir_chk_crt if returns true.
-        test_arg_cond_req_true -> Test arg_cond_req if returns true.
-        test_arg_cond_req_false -> Test arg_cond_req if returns false.
+        test_arg_xor_dict_true -> Test arg_xor_dict if returns true.
+        test_arg_xor_dict_false -> Test arg_xor_dict if returns false.
         test_arg_require_false -> Test arg_require if returns false.
         test_arg_require_true -> Test arg_require if returns true.
-        test_arg_req_xor_true -> Test arg_req_xor if returns true.
-        test_arg_req_xor_false -> Test arg_req_xor if returns false.
         test_help_false -> Test help if returns false.
         test_help_true -> Test help if returns true.
 
@@ -168,7 +166,7 @@ class UnitTest(unittest.TestCase):
         mock_help.return_value = False
         mock_arg.arg_require.return_value = False
         mock_arg.arg_xor_dict.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = True
+        mock_arg.arg_dir_chk_crt.return_value = False
 
         self.assertFalse(mysql_rep_failover.main())
 
