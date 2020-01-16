@@ -343,14 +343,13 @@ def run_program(args_array, func_dict, **kwargs):
             err_flag, err_msg = func_dict[x](slaves, args_array)
 
             if err_flag:
-                cmds_gen.disconnect(slaves)
-                sys.exit(err_msg)
+                print(err_msg)
                 break
 
         cmds_gen.disconnect(slaves)
 
     else:
-        sys.exit("Error:  Empty Slave array or Slave(s) not GTID enabled.")
+        print("Error:  Empty Slave array or Slave(s) not GTID enabled.")
 
 
 def main():
