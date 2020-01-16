@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.1.0] - 2020-01-10
 ### Fixed
+- promote_designated_slave:  Cannot reference class if slave not found in array.
 - show_slave_delays:  Fixed problem with mutable default arguments issue.
 - show_best_slave:  Fixed problem with mutable default arguments issue.
 - promote_designated_slave:  Fixed problem with mutable default arguments issue.

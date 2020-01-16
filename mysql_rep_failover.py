@@ -203,7 +203,7 @@ def promote_designated_slave(slaves, args_array, **kwargs):
 
     else:
         err_flag = True
-        err_msg = "Slave: %s was not found in slave array" % (master.name)
+        err_msg = "Slave: %s was not found in slave array" % (args_array["-G"])
 
     return err_flag, err_msg
 
