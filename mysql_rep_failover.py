@@ -324,20 +324,20 @@ def run_program(args_array, func_dict, **kwargs):
 
     """
 
-    SLAVES = create_instances(args_array)
+    slaves = create_instances(args_array)
 
-    if SLAVES and gtid_enabled(SLAVES):
+    if slaves and gtid_enabled(slaves):
 
         # Call function(s) - intersection of command line and function dict.
         for x in set(args_array.keys()) & set(func_dict.keys()):
-            err_flag, err_msg = func_dict[x](SLAVES, args_array)
+            err_flag, err_msg = func_dict[x](slaves, args_array)
 
             if err_flag:
-                cmds_gen.disconnect(SLAVES)
+                cmds_gen.disconnect(slaves)
                 sys.exit(err_msg)
                 break
 
-        cmds_gen.disconnect(SLAVES)
+        cmds_gen.disconnect(slaves)
 
     else:
         sys.exit("Error:  Empty Slave array or Slave(s) not GTID enabled.")
