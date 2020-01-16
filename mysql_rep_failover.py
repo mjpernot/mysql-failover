@@ -302,6 +302,7 @@ def gtid_enabled(slaves, **kwargs):
 
     """
 
+    slaves = list(slaves)
     gtid_enabled = True
 
     for slv in slaves:
