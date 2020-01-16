@@ -127,9 +127,6 @@ class UnitTest(unittest.TestCase):
         self.slavearray.append(self.slave2)
         self.slavearray.append(self.slave3)
         self.slavearray2.append(self.slave1)
-        slv0 = self.slavearray[0]
-        slv1 = self.slavearray[1]
-        slv2 = self.slavearray[2]
         self.args_array = {"-G": "slave1"}
         self.args_array2 = {"-G": "slave0"}
         self.results = \
