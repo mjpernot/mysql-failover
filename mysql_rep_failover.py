@@ -136,22 +136,22 @@ def show_slave_delays(SLAVES, args_array, **kwargs):
     return False, None
 
 
-def show_best_slave(SLAVES, args_array, **kwargs):
+def show_best_slave(slaves, args_array, **kwargs):
 
     """Function:  show_best_slave
 
     Description:  Display which slave is the best slave within the replication.
 
     Arguments:
-        (input) SLAVES -> Slave instance array.
+        (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
         (output) True|False -> if an error has occurred.
         (output) -> Error message.
 
     """
 
-    __, BEST_SLV = order_slaves_on_gtid(SLAVES).pop(0)
-    print("Best Slave: %s" % (BEST_SLV.name))
+    __, best_slv = order_slaves_on_gtid(slaves).pop(0)
+    print("Best Slave: %s" % (best_slv.name))
 
     return False, None
 
