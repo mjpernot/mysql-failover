@@ -290,23 +290,23 @@ def create_instances(args_array, **kwargs):
     return SLAVES
 
 
-def gtid_enabled(SLAVES, **kwargs):
+def gtid_enabled(slaves, **kwargs):
 
     """Function:  gtid_enabled
 
     Description:  Check to see that all slaves are GTID enabled.
 
     Arguments:
-        (input) SLAVES -> Slave instance array.
+        (input) slaves -> Slave instance array.
         (output) True|False - If all slaves are GTID enabled.
 
     """
 
     gtid_enabled = True
 
-    for SLV in SLAVES:
+    for slv in slaves:
 
-        if not SLV.gtid_mode:
+        if not slv.gtid_mode:
             gtid_enabled = False
 
     return gtid_enabled
