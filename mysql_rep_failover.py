@@ -215,6 +215,7 @@ def order_slaves_on_gtid(slaves, **kwargs):
 
     """
 
+    slaves = list(slaves)
     slave_list = []
 
     for slv in slaves:
