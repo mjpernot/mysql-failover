@@ -244,13 +244,14 @@ def promote_best_slave(slaves, args_array, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+    slaves = list(slaves)
     err_flag = False
     err_msg = None
     bad_slv = []
-
     slave_list = order_slaves_on_gtid(slaves)
 
-    # Best slave will be new master.
+    # Best slave (new master) will be at the top.
     __, master = slave_list.pop(0)
 
     for __, slv in slave_list:
