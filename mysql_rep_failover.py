@@ -150,6 +150,8 @@ def show_best_slave(slaves, args_array, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+    slaves = list(slaves)
     __, best_slv = order_slaves_on_gtid(slaves).pop(0)
     print("Best Slave: %s" % (best_slv.name))
 
