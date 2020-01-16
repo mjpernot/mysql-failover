@@ -175,10 +175,11 @@ def promote_designated_slave(slaves, args_array, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+    slaves = list(slaves)
     err_flag = False
     err_msg = None
     bad_slv = []
-
     master = mysql_libs.find_name(slaves, args_array["-G"])
 
     if master:
