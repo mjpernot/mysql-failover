@@ -156,7 +156,7 @@ def show_best_slave(SLAVES, args_array, **kwargs):
     return False, None
 
 
-def promote_designated_slave(SLAVES, args_array, **kwargs):
+def promote_designated_slave(slaves, args_array, **kwargs):
 
     """Function:  promote_designated_slave
 
@@ -168,7 +168,7 @@ def promote_designated_slave(SLAVES, args_array, **kwargs):
         thread will still point to the old master.
 
     Arguments:
-        (input) SLAVES -> Slave instance array.
+        (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
@@ -179,17 +179,17 @@ def promote_designated_slave(SLAVES, args_array, **kwargs):
     err_msg = None
     bad_slv = []
 
-    MASTER = mysql_libs.find_name(SLAVES, args_array["-G"])
+    master = mysql_libs.find_name(slaves, args_array["-G"])
 
-    if MASTER:
-        SLAVES.remove(MASTER)
+    if master:
+        slaves.remove(master)
 
-        for SLV in SLAVES:
-            status_flag = mysql_libs.switch_to_master(MASTER, SLV)
+        for slv in slaves:
+            status_flag = mysql_libs.switch_to_master(master, slv)
 
             if status_flag == -1:
                 err_flag = True
-                bad_slv.append(SLV.name)
+                bad_slv.append(slv.name)
 
         if err_flag:
             err_msg = "Slaves: %s that did not change to new master." \
@@ -197,7 +197,7 @@ def promote_designated_slave(SLAVES, args_array, **kwargs):
 
     else:
         err_flag = True
-        err_msg = "Slave: %s was not found in slave array" % (MASTER.name)
+        err_msg = "Slave: %s was not found in slave array" % (master.name)
 
     return err_flag, err_msg
 
