@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.1.0] - 2020-01-10
 ### Changed
+- show_slave_delays:  Changed variable name to standard convention.
 - show_best_slave:  Changed variable name to standard convention.
 - promote_designated_slave:  Changed variable name to standard convention.
 - order_slaves_on_gtid:  Changed variable name to standard convention.

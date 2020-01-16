@@ -110,7 +110,7 @@ def help_message():
     print(__doc__)
 
 
-def show_slave_delays(SLAVES, args_array, **kwargs):
+def show_slave_delays(slaves, args_array, **kwargs):
 
     """Function:  show_slave_delays
 
@@ -118,14 +118,14 @@ def show_slave_delays(SLAVES, args_array, **kwargs):
         their GTID positions.
 
     Arguments:
-        (input) SLAVES -> Slave instance array.
+        (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
         (output) True|False -> if an error has occurred.
         (output) -> Error message.
 
     """
 
-    slave_list = order_slaves_on_gtid(SLAVES)
+    slave_list = order_slaves_on_gtid(slaves)
 
     gtid, slv = slave_list.pop(0)
     print("Best Slave: {0}\tGTID Pos: {1}".format(slv.name, gtid))
