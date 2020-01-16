@@ -279,15 +279,14 @@ def create_instances(args_array, **kwargs):
 
     """
 
-    SLAVES = []
+    slaves = []
 
     # Parse the slave config file.
     slv_array = cmds_gen.create_cfg_array(args_array["-s"],
                                           cfg_path=args_array["-d"])
+    slaves = mysql_libs.create_slv_array(slv_array)
 
-    SLAVES = mysql_libs.create_slv_array(slv_array)
-
-    return SLAVES
+    return slaves
 
 
 def gtid_enabled(slaves, **kwargs):
@@ -305,7 +304,6 @@ def gtid_enabled(slaves, **kwargs):
     gtid_enabled = True
 
     for slv in slaves:
-
         if not slv.gtid_mode:
             gtid_enabled = False
 
