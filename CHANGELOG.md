@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.1.0] - 2020-01-10
 ### Changed
+- order_slaves_on_gtid:  Changed variable name to standard convention.
 - promote_best_slave:  Changed variable name to standard convention.
 - create_instances:  Changed variable name to standard convention.
 - gtid_enabled:  Changed variable name to standard convention.

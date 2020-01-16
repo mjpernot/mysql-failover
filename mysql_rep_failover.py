@@ -202,7 +202,7 @@ def promote_designated_slave(SLAVES, args_array, **kwargs):
     return err_flag, err_msg
 
 
-def order_slaves_on_gtid(SLAVES, **kwargs):
+def order_slaves_on_gtid(slaves, **kwargs):
 
     """Function:  order_slaves_on_gtid
 
@@ -210,15 +210,15 @@ def order_slaves_on_gtid(SLAVES, **kwargs):
         with the top(first) slave being the best Slave.
 
     Arguments:
-        (input) SLAVES -> Slave instance array.
+        (input) slaves -> Slave instance array.
         (output) slave_list -> List of slaves in best order.
 
     """
 
     slave_list = []
 
-    for SLV in SLAVES:
-        slave_list.append((SLV.exe_gtidset, SLV))
+    for slv in slaves:
+        slave_list.append((slv.exe_gtidset, slv))
 
     slave_list.sort(key=lambda x: x[0])
 
