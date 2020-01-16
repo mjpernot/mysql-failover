@@ -16,6 +16,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - run_program:  Fixed problem with mutable default arguments issue.
 
 ### Changed
+- config/slave.txt.TEMPLATE:  Added extra_def_file entry to file.
 - run_program:  Replaced sys.exit() calls with print calls.
 - main:  Added program lock functionality to program.
 - main:  Added new option -y to the program.
