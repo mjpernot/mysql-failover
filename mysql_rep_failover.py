@@ -125,8 +125,9 @@ def show_slave_delays(slaves, args_array, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+    slaves = list(slaves)
     slave_list = order_slaves_on_gtid(slaves)
-
     gtid, slv = slave_list.pop(0)
     print("Best Slave: {0}\tGTID Pos: {1}".format(slv.name, gtid))
 
