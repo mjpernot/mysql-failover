@@ -279,6 +279,7 @@ def create_instances(args_array, **kwargs):
 
     """
 
+    args_array = dict(args_array)
     slaves = []
 
     # Parse the slave config file.
