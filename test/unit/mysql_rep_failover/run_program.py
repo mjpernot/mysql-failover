@@ -131,7 +131,6 @@ class UnitTest(unittest.TestCase):
         self.args_array = {"-B": True}
         self.args_array2 = {"-D": True}
 
-    @mock.patch("mysql_rep_failover.sys.exit", mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.gtid_enabled",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.cmds_gen.disconnect",
@@ -149,10 +148,10 @@ class UnitTest(unittest.TestCase):
 
         mock_instance.return_value = self.slavearray
 
-        self.assertFalse(mysql_rep_failover.run_program(self.args_array2,
-                                                        self.func_dict2))
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_rep_failover.run_program(self.args_array2,
+                                                            self.func_dict2))
 
-    @mock.patch("mysql_rep_failover.sys.exit", mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.gtid_enabled",
                 mock.Mock(return_value=False))
     @mock.patch("mysql_rep_failover.create_instances")
@@ -168,10 +167,10 @@ class UnitTest(unittest.TestCase):
 
         mock_instance.return_value = self.slavearray
 
-        self.assertFalse(mysql_rep_failover.run_program(self.args_array,
-                                                        self.func_dict))
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_rep_failover.run_program(self.args_array,
+                                                            self.func_dict))
 
-    @mock.patch("mysql_rep_failover.sys.exit", mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.gtid_enabled",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.create_instances")
@@ -187,8 +186,9 @@ class UnitTest(unittest.TestCase):
 
         mock_instance.return_value = []
 
-        self.assertFalse(mysql_rep_failover.run_program(self.args_array,
-                                                        self.func_dict))
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_rep_failover.run_program(self.args_array,
+                                                            self.func_dict))
 
     @mock.patch("mysql_rep_failover.gtid_enabled",
                 mock.Mock(return_value=True))
