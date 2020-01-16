@@ -20,7 +20,7 @@
 
     Usage:
         mysql_rep_failover.py -s [path/]file -d path [-F | -G name | -B | -D]
-        [-v | -h]
+        [-y flavor_id] [-v | -h]
 
     Arguments:
         -s file => Slave config file.  Will be a text file.  Include the
@@ -40,6 +40,7 @@
             with the other slaves in the set.
         -D => Shows the slaves in the replication set from best to
             worst and displays the differences.
+        -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -89,6 +90,7 @@ import sys
 # Local
 import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
+import lib.gen_class as gen_class
 import lib.cmds_gen as cmds_gen
 import mysql_lib.mysql_libs as mysql_libs
 import version
@@ -374,7 +376,7 @@ def main():
     func_dict = {"-B": show_best_slave, "-D": show_slave_delays,
                  "-F": promote_best_slave, "-G": promote_designated_slave}
     opt_req_list = ["-d", "-s"]
-    opt_val_list = ["-d", "-s", "-G"]
+    opt_val_list = ["-d", "-s", "-G", "-y"]
     opt_xor_dict = {"-B": ["-D", "-F", "-G"], "-D": ["-B", "-F", "-G"],
                     "-F": ["-B", "-D", "-G"], "-G": ["-B", "-D", "-F"]}
 
@@ -385,7 +387,16 @@ def main():
        and not arg_parser.arg_require(args_array, opt_req_list) \
        and arg_parser.arg_xor_dict(args_array, opt_xor_dict) \
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
-        run_program(args_array, func_dict)
+
+        try:
+            prog_lock = gen_class.ProgramLock(sys.argv,
+                                              args_array.get("-y", ""))
+            run_program(args_array, func_dict)
+            del prog_lock
+
+        except gen_class.SingleInstanceException:
+            print("WARNING:  Lock in place for mysql_rep_failover with id: %s"
+                  % (args_array.get("-y", "")))
 
 
 if __name__ == "__main__":

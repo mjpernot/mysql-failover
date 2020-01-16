@@ -16,6 +16,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - run_program:  Fixed problem with mutable default arguments issue.
 
 ### Changed
+- main:  Added program lock functionality to program.
+- main:  Added new option -y to the program.
 - main:  Refactored if statements.
 - show_slave_delays:  Changed variable name to standard convention.
 - show_best_slave:  Changed variable name to standard convention.
