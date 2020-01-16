@@ -20,7 +20,7 @@
 
     Usage:
         mysql_rep_failover.py -s [path/]file -d path [-F | -G name | -B | -D]
-        [-v | -h]
+        [-y flavor_id] [-v | -h]
 
     Arguments:
         -s file => Slave config file.  Will be a text file.  Include the
@@ -40,6 +40,7 @@
             with the other slaves in the set.
         -D => Shows the slaves in the replication set from best to
             worst and displays the differences.
+        -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -47,8 +48,8 @@
         NOTE 2:  -F, -G, -B, and -D are XOR arguments.
 
     Notes:
-        Slave(s) configuration file format (filename.txt)
-            # Slave 1 configuration {Database Name/Server}
+        Slave configuration file format (slave.txt.TEMPLATE)
+            # Slave configuration
             user = root
             passwd = ROOT_PASSWORD
             host = IP_ADDRESS
@@ -57,11 +58,24 @@
             port = PORT_NUMBER
             cfg_file DIRECTORY_PATH/my.cnf
             sid = SERVER_ID
-            # Slave N configuration {Database Name/Server}
-               Repeat rest of above section for Slave 1.
+            extra_def_file = DIRECTORY_PATH/mysql.cfg
 
-        NOTE:  Include the cfg_file even if running remotely as the file
-            will be used in future releases.
+        NOTE 1:  Include the cfg_file even if running remotely as the file will
+            be used in future releases.
+
+        NOTE 2:  In MySQL 5.6 - it now gives warning if password is passed on
+            the command line.  To suppress this warning, will require the use
+            of the --defaults-extra-file option (i.e. extra_def_file) in the
+            database configuration file.  See below for the defaults-extra-file
+            format.
+
+        Defaults Extra File format (mysql.cfg.TEMPLATE):
+            [client]
+            password="ROOT_PASSWORD"
+            socket="DIRECTORY_PATH/mysql.sock"
+
+        NOTE:  The socket information can be obtained from the my.cnf
+            file under ~/mysql directory.
 
     Example:
         mysql_rep_failover.py -s slaves.txt -d config -F
@@ -76,11 +90,11 @@ import sys
 # Local
 import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
+import lib.gen_class as gen_class
 import lib.cmds_gen as cmds_gen
 import mysql_lib.mysql_libs as mysql_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -98,7 +112,7 @@ def help_message():
     print(__doc__)
 
 
-def show_slave_delays(SLAVES, args_array, **kwargs):
+def show_slave_delays(slaves, args_array, **kwargs):
 
     """Function:  show_slave_delays
 
@@ -106,17 +120,16 @@ def show_slave_delays(SLAVES, args_array, **kwargs):
         their GTID positions.
 
     Arguments:
-        (input) SLAVES -> Slave instance array.
+        (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
         (output) True|False -> if an error has occurred.
         (output) -> Error message.
 
     """
 
-    slave_list = order_slaves_on_gtid(SLAVES)
-
+    args_array = dict(args_array)
+    slaves = list(slaves)
+    slave_list = order_slaves_on_gtid(slaves)
     gtid, slv = slave_list.pop(0)
     print("Best Slave: {0}\tGTID Pos: {1}".format(slv.name, gtid))
 
@@ -126,29 +139,29 @@ def show_slave_delays(SLAVES, args_array, **kwargs):
     return False, None
 
 
-def show_best_slave(SLAVES, args_array, **kwargs):
+def show_best_slave(slaves, args_array, **kwargs):
 
     """Function:  show_best_slave
 
     Description:  Display which slave is the best slave within the replication.
 
     Arguments:
-        (input) SLAVES -> Slave instance array.
+        (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
         (output) True|False -> if an error has occurred.
         (output) -> Error message.
 
     """
 
-    __, BEST_SLV = order_slaves_on_gtid(SLAVES).pop(0)
-    print("Best Slave: %s" % (BEST_SLV.name))
+    args_array = dict(args_array)
+    slaves = list(slaves)
+    __, best_slv = order_slaves_on_gtid(slaves).pop(0)
+    print("Best Slave: %s" % (best_slv.name))
 
     return False, None
 
 
-def promote_designated_slave(SLAVES, args_array, **kwargs):
+def promote_designated_slave(slaves, args_array, **kwargs):
 
     """Function:  promote_designated_slave
 
@@ -160,30 +173,29 @@ def promote_designated_slave(SLAVES, args_array, **kwargs):
         thread will still point to the old master.
 
     Arguments:
-        (input) SLAVES -> Slave instance array.
+        (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
 
     """
 
+    args_array = dict(args_array)
+    slaves = list(slaves)
     err_flag = False
     err_msg = None
     bad_slv = []
+    master = mysql_libs.find_name(slaves, args_array["-G"])
 
-    MASTER = mysql_libs.find_name(SLAVES, args_array["-G"])
+    if master:
+        slaves.remove(master)
 
-    if MASTER:
-        SLAVES.remove(MASTER)
-
-        for SLV in SLAVES:
-            status_flag = mysql_libs.switch_to_master(MASTER, SLV)
+        for slv in slaves:
+            status_flag = mysql_libs.switch_to_master(master, slv)
 
             if status_flag == -1:
                 err_flag = True
-                bad_slv.append(SLV.name)
+                bad_slv.append(slv.name)
 
         if err_flag:
             err_msg = "Slaves: %s that did not change to new master." \
@@ -191,12 +203,12 @@ def promote_designated_slave(SLAVES, args_array, **kwargs):
 
     else:
         err_flag = True
-        err_msg = "Slave: %s was not found in slave array" % (MASTER.name)
+        err_msg = "Slave: %s was not found in slave array" % (args_array["-G"])
 
     return err_flag, err_msg
 
 
-def order_slaves_on_gtid(SLAVES, **kwargs):
+def order_slaves_on_gtid(slaves, **kwargs):
 
     """Function:  order_slaves_on_gtid
 
@@ -204,24 +216,23 @@ def order_slaves_on_gtid(SLAVES, **kwargs):
         with the top(first) slave being the best Slave.
 
     Arguments:
-        (input) SLAVES -> Slave instance array.
-        (input) **kwargs:
-            None
+        (input) slaves -> Slave instance array.
         (output) slave_list -> List of slaves in best order.
 
     """
 
+    slaves = list(slaves)
     slave_list = []
 
-    for SLV in SLAVES:
-        slave_list.append((SLV.exe_gtidset, SLV))
+    for slv in slaves:
+        slave_list.append((slv.exe_gtidset, slv))
 
     slave_list.sort(key=lambda x: x[0])
 
     return slave_list
 
 
-def promote_best_slave(SLAVES, args_array, **kwargs):
+def promote_best_slave(slaves, args_array, **kwargs):
 
     """Function:  promote_best_slave
 
@@ -233,30 +244,29 @@ def promote_best_slave(SLAVES, args_array, **kwargs):
          thread will still point to the old master.
 
     Arguments:
-        (input) SLAVES -> Slave instance array.
+        (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
 
     """
 
+    args_array = dict(args_array)
+    slaves = list(slaves)
     err_flag = False
     err_msg = None
     bad_slv = []
+    slave_list = order_slaves_on_gtid(slaves)
 
-    slave_list = order_slaves_on_gtid(SLAVES)
+    # Best slave (new master) will be at the top.
+    __, master = slave_list.pop(0)
 
-    # Best slave will be new master.
-    __, MASTER = slave_list.pop(0)
-
-    for __, SLV in slave_list:
-        status_flag = mysql_libs.switch_to_master(MASTER, SLV)
+    for __, slv in slave_list:
+        status_flag = mysql_libs.switch_to_master(master, slv)
 
         if status_flag == -1:
             err_flag = True
-            bad_slv.append(SLV.name)
+            bad_slv.append(slv.name)
 
     if err_flag:
         err_msg = "Slaves: %s that did not change to new master." % (bad_slv)
@@ -273,42 +283,38 @@ def create_instances(args_array, **kwargs):
 
     Arguments:
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
         (output) SLAVE -> Slave instance array.
 
     """
 
-    SLAVES = []
+    args_array = dict(args_array)
+    slaves = []
 
     # Parse the slave config file.
     slv_array = cmds_gen.create_cfg_array(args_array["-s"],
                                           cfg_path=args_array["-d"])
+    slaves = mysql_libs.create_slv_array(slv_array)
 
-    SLAVES = mysql_libs.create_slv_array(slv_array)
-
-    return SLAVES
+    return slaves
 
 
-def gtid_enabled(SLAVES, **kwargs):
+def gtid_enabled(slaves, **kwargs):
 
     """Function:  gtid_enabled
 
     Description:  Check to see that all slaves are GTID enabled.
 
     Arguments:
-        (input) SLAVES -> Slave instance array.
-        (input) **kwargs:
-            None
+        (input) slaves -> Slave instance array.
         (output) True|False - If all slaves are GTID enabled.
 
     """
 
+    slaves = list(slaves)
     gtid_enabled = True
 
-    for SLV in SLAVES:
-
-        if not SLV.gtid_mode:
+    for slv in slaves:
+        if not slv.gtid_mode:
             gtid_enabled = False
 
     return gtid_enabled
@@ -323,28 +329,27 @@ def run_program(args_array, func_dict, **kwargs):
     Arguments:
         (input) args_array -> Array of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
-        (input) **kwargs:
-            None
 
     """
 
-    SLAVES = create_instances(args_array)
+    args_array = dict(args_array)
+    func_dict = dict(func_dict)
+    slaves = create_instances(args_array)
 
-    if SLAVES and gtid_enabled(SLAVES):
+    if slaves and gtid_enabled(slaves):
 
         # Call function(s) - intersection of command line and function dict.
         for x in set(args_array.keys()) & set(func_dict.keys()):
-            err_flag, err_msg = func_dict[x](SLAVES, args_array)
+            err_flag, err_msg = func_dict[x](slaves, args_array)
 
             if err_flag:
-                cmds_gen.disconnect(SLAVES)
-                sys.exit(err_msg)
+                print(err_msg)
                 break
 
-        cmds_gen.disconnect(SLAVES)
+        cmds_gen.disconnect(slaves)
 
     else:
-        sys.exit("Error:  Empty Slave array or Slave(s) not GTID enabled.")
+        print("Error:  Empty Slave array or Slave(s) not GTID enabled.")
 
 
 def main():
@@ -370,18 +375,27 @@ def main():
     func_dict = {"-B": show_best_slave, "-D": show_slave_delays,
                  "-F": promote_best_slave, "-G": promote_designated_slave}
     opt_req_list = ["-d", "-s"]
-    opt_val_list = ["-d", "-s", "-G"]
+    opt_val_list = ["-d", "-s", "-G", "-y"]
     opt_xor_dict = {"-B": ["-D", "-F", "-G"], "-D": ["-B", "-F", "-G"],
                     "-F": ["-B", "-D", "-G"], "-G": ["-B", "-D", "-F"]}
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(sys.argv, opt_val_list)
 
-    if not gen_libs.help_func(args_array, __version__, help_message):
-        if not arg_parser.arg_require(args_array, opt_req_list) \
-           and arg_parser.arg_xor_dict(args_array, opt_xor_dict) \
-           and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
+    if not gen_libs.help_func(args_array, __version__, help_message) \
+       and not arg_parser.arg_require(args_array, opt_req_list) \
+       and arg_parser.arg_xor_dict(args_array, opt_xor_dict) \
+       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
+
+        try:
+            prog_lock = gen_class.ProgramLock(sys.argv,
+                                              args_array.get("-y", ""))
             run_program(args_array, func_dict)
+            del prog_lock
+
+        except gen_class.SingleInstanceException:
+            print("WARNING:  Lock in place for mysql_rep_failover with id: %s"
+                  % (args_array.get("-y", "")))
 
 
 if __name__ == "__main__":
