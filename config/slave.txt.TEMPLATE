@@ -15,3 +15,5 @@ cfg_file = None
 port = 3306
 # Server running OS
 serv_os = Linux
+# MySQL Definition configuration file
+extra_def_file = '{PROJECT_DIR_PATH}/config/mysql.cfg'
