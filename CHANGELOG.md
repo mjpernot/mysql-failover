@@ -5,6 +5,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.1.1] - 2020-08-07
+### Fixed
+- main:  Fixed handling command line arguments from SonarQube scan finding.
+
 ### Changed
 - show_best_slave:  Changed variables to a placeholder variables.
 - order_slaves_on_gtid:  Changed variable name to standard naming convention.
