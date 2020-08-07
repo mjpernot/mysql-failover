@@ -227,7 +227,7 @@ def order_slaves_on_gtid(slaves, **kwargs):
     for slv in slaves:
         slave_list.append((slv.exe_gtidset, slv))
 
-    slave_list.sort(key=lambda x: x[0])
+    slave_list.sort(key=lambda item: item[0])
 
     return slave_list
 
