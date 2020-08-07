@@ -2,10 +2,10 @@
 # Classification (U)
 # Unclassified until filled in.
 # Slave 1 Configuration
-user = root
+user = USER
 passwd = PASSWORD
 # MySQL DB host information
-host = SERVER_IP
+host = HOST_IP
 name = HOST_NAME
 # MySQL database server id - unique to each database
 sid = SERVER_ID
