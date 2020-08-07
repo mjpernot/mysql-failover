@@ -48,16 +48,16 @@
         NOTE 2:  -F, -G, -B, and -D are XOR arguments.
 
     Notes:
-        Slave configuration file format (slave.txt.TEMPLATE)
+        Slave configuration file format (config/slave.txt.TEMPLATE)
             # Slave configuration
-            user = root
-            passwd = ROOT_PASSWORD
-            host = IP_ADDRESS
-            serv_os = Linux or Solaris
-            name = HOSTNAME
-            port = PORT_NUMBER
-            cfg_file DIRECTORY_PATH/my.cnf
+            user = USER
+            passwd = PASSWORD
+            host = HOST_IP
+            name = HOST_NAME
             sid = SERVER_ID
+            cfg_file = None
+            port = 3306
+            serv_os = Linux
             extra_def_file = DIRECTORY_PATH/mysql.cfg
 
         NOTE 1:  Include the cfg_file even if running remotely as the file will
@@ -69,10 +69,10 @@
             database configuration file.  See below for the defaults-extra-file
             format.
 
-        Defaults Extra File format (mysql.cfg.TEMPLATE):
+        Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
-            password="ROOT_PASSWORD"
-            socket="DIRECTORY_PATH/mysql.sock"
+            password="PASSWORD"
+            socket="MYSQL_DIRECTORY/mysql.sock"
 
         NOTE:  The socket information can be obtained from the my.cnf
             file under ~/mysql directory.

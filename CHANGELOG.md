@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.1.1] - 2020-08-07
+### Changed
+- Documentation updates.
+
+
 ## [2.1.0] - 2020-01-10
 ### Fixed
 - promote_designated_slave:  Cannot reference class if slave not found in array.
