@@ -339,8 +339,8 @@ def run_program(args_array, func_dict, **kwargs):
     if slaves and gtid_enabled(slaves):
 
         # Call function(s) - intersection of command line and function dict.
-        for x in set(args_array.keys()) & set(func_dict.keys()):
-            err_flag, err_msg = func_dict[x](slaves, args_array)
+        for item in set(args_array.keys()) & set(func_dict.keys()):
+            err_flag, err_msg = func_dict[item](slaves, args_array)
 
             if err_flag:
                 print(err_msg)
