@@ -2,10 +2,10 @@
 # Classification (U)
 
 # Description:
-  This program is used to conduct replication failover in a MySQL replica set, to include switching the best slave to master and selecting a specific slave to become master.
+  Used to conduct replication failover in a MySQL replica set, to include switching the best slave to master and selecting a specific slave to become master.
 
 
-##  This README file is broken down into the following sections:
+###  This README file is broken down into the following sections:
   * Features
   * Prerequisites
   * Installation
@@ -24,8 +24,6 @@
 # Prerequisites:
 
   * List of Linux packages that need to be installed on the server.
-    - python-libs
-    - python-devel
     - git
     - python-pip
 
@@ -69,21 +67,18 @@ pip install -r requirements-python-lib.txt --target mysql_lib/lib --trusted-host
 # Configuration:
 
 Create a MySQL slave configuration file.
-
-```
-cp slave.txt.TEMPLATE slave.txt
-```
-
 Make the appropriate change to the environment.
   * Change these entries in the MySQL slave setup:
-    - passwd = ROOT_PASSWORD
+    - user = USER
+    - passwd = PASSWORD
     - host = HOST_IP
-    - name = HOSTNAME
+    - name = HOST_NAME
     - sid = SERVER_ID
-    - extra_def_file = {Python_Project}/config/mysql.cfg
+    - extra_def_file = 'DIRECTORY_PATH/mysql.cfg'
   * Create a new set of entries for each slave in the MySQL replica set.
 
 ```
+cp slave.txt.TEMPLATE slave.txt
 vim slave.txt
 chmod 600 slave.txt
 ```
@@ -96,8 +91,8 @@ cp mysql.cfg.TEMPLATE mysql.cfg
 
 Make the appropriate change to the MySQL definition setup.
   * Change these entries in the MySQL configuration file:
-    - password="ROOT_PASSWORD"
-    - socket={BASE_DIR}/mysql/tmp/mysql.sock
+    - password="PASSWORD"
+    - socket=MYSQL_DIRECTORY/mysql.sock
 
 ```
 vim mysql.cfg
@@ -117,10 +112,7 @@ chmod 600 mysql.cfg
 
 # Testing:
 
-
 # Unit Testing:
-
-### Description: Testing consists of unit testing for the functions in the mysql_rep_failover.py program.
 
 ### Installation:
 
@@ -156,28 +148,17 @@ pip install -r requirements-python-lib.txt --target mysql_lib/lib --trusted-host
 # Unit test runs for mysql_rep_failover.py:
   * Replace **{Python_Project}** with the baseline path of the python program.
 
-### Unit testing:
+### Testing:
+
 ```
 cd {Python_Project}/mysql-failover
-test/unit/mysql_rep_failover/create_instances.py
-test/unit/mysql_rep_failover/gtid_enabled.py
-test/unit/mysql_rep_failover/help_message.py
-test/unit/mysql_rep_failover/main.py
-test/unit/mysql_rep_failover/order_slaves_on_gtid.py
-test/unit/mysql_rep_failover/promote_best_slave.py
-test/unit/mysql_rep_failover/promote_designated_slave.py
-test/unit/mysql_rep_failover/run_program.py
-test/unit/mysql_rep_failover/show_best_slave.py
-test/unit/mysql_rep_failover/show_slave_delays.py
-```
-
-### All unit testing
-```
 test/unit/mysql_rep_failover/unit_test_run.sh
 ```
 
-### Code coverage program
+### Code coverage:
+
 ```
+cd {Python_Project}/mysql-failover
 test/unit/mysql_rep_failover/code_coverage.sh
 ```
 
