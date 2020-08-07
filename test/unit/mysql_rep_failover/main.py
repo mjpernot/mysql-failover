@@ -73,6 +73,7 @@ class UnitTest(unittest.TestCase):
         test_programlock_id -> Test with ProgramLock with flavor id.
         test_programlock_false -> Test with ProgramLock returns False.
         test_programlock_true -> Test with ProgramLock returns True.
+        test_run_program -> Test with run_program.
         test_arg_dir_chk_crt_false -> Test arg_dir_chk_crt if returns false.
         test_arg_dir_chk_crt_true -> Test arg_dir_chk_crt if returns true.
         test_arg_xor_dict_true -> Test arg_xor_dict if returns true.
@@ -167,6 +168,29 @@ class UnitTest(unittest.TestCase):
         mock_arg.arg_req_xor.return_value = True
         mock_arg.arg_require.return_value = False
         mock_arg.arg_cond_req.return_value = True
+        mock_arg.arg_dir_chk_crt.return_value = False
+        mock_lock.return_value = self.proglock
+
+        self.assertFalse(mysql_rep_failover.main())
+
+    @mock.patch("mysql_rep_failover.run_program", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_failover.gen_class.ProgramLock")
+    @mock.patch("mysql_rep_failover.gen_libs.help_func")
+    @mock.patch("mysql_rep_failover.arg_parser")
+    def test_run_program(self, mock_arg, mock_help, mock_lock):
+
+        """Function:  test_run_program
+
+        Description:  Test with run_program.
+
+        Arguments:
+
+        """
+
+        mock_arg.arg_parse2.return_value = self.args_array
+        mock_help.return_value = False
+        mock_arg.arg_require.return_value = False
+        mock_arg.arg_xor_dict.return_value = True
         mock_arg.arg_dir_chk_crt.return_value = False
         mock_lock.return_value = self.proglock
 
