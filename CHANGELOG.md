@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.1.1] - 2020-08-07
 ### Changed
+- promote_best_slave:  Changed variables to a placeholder variables.
 - gtid_enabled:  Changed variable name to possible naming conflict.
 - run_program:  Changed variable name to standard naming convention.
 - Documentation updates.

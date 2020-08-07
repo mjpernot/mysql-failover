@@ -259,9 +259,9 @@ def promote_best_slave(slaves, args_array, **kwargs):
     slave_list = order_slaves_on_gtid(slaves)
 
     # Best slave (new master) will be at the top.
-    __, master = slave_list.pop(0)
+    _, master = slave_list.pop(0)
 
-    for __, slv in slave_list:
+    for _, slv in slave_list:
         status_flag = mysql_libs.switch_to_master(master, slv)
 
         if status_flag == -1:
@@ -283,7 +283,7 @@ def create_instances(args_array, **kwargs):
 
     Arguments:
         (input) args_array -> Array of command line options and values.
-        (output) SLAVE -> Slave instance array.
+        (output) slaves -> List of slave instances.
 
     """
 
