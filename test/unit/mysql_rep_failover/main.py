@@ -35,6 +35,33 @@ import version
 __version__ = version.__version__
 
 
+class ProgramLock(object):
+
+    """Class:  ProgramLock
+
+    Description:  Class stub holder for gen_class.ProgramLock class.
+
+    Methods:
+        __init__ -> Class initialization.
+
+    """
+
+    def __init__(self, cmdline, flavor):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+            (input) cmdline -> Argv command line.
+            (input) flavor -> Lock flavor ID.
+
+        """
+
+        self.cmdline = cmdline
+        self.flavor = flavor
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -68,13 +95,14 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args_array = {"-c": "CfgFile", "-d": "CfgDir"}
+        self.args_array2 = {"-c": "CfgFile", "-d": "CfgDir", "-y": "Flavor"}
+        self.proglock = ProgramLock(["cmdline"], "FlavorID")
 
-    @mock.patch("mysql_rep_failover.gen_class.ProgramLock",
-                mock.Mock(side_effect=None))
     @mock.patch("mysql_rep_failover.run_program", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_failover.gen_class.ProgramLock")
     @mock.patch("mysql_rep_failover.gen_libs.help_func")
     @mock.patch("mysql_rep_failover.arg_parser")
-    def test_programlock_id(self, mock_arg, mock_help):
+    def test_programlock_id(self, mock_arg, mock_help, mock_lock):
 
         """Function:  test_programlock_id
 
@@ -84,23 +112,21 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
+        mock_arg.arg_parse2.return_value = self.args_array2
         mock_help.return_value = False
         mock_arg.arg_req_xor.return_value = True
         mock_arg.arg_require.return_value = False
         mock_arg.arg_cond_req.return_value = True
         mock_arg.arg_dir_chk_crt.return_value = False
-
-        self.args_array["-y"] = "FlavorID"
+        mock_lock.return_value = self.proglock
 
         self.assertFalse(mysql_rep_failover.main())
 
-    @mock.patch("mysql_rep_failover.gen_class.ProgramLock", mock.Mock(
-        side_effect=mysql_rep_failover.gen_class.SingleInstanceException))
     @mock.patch("mysql_rep_failover.run_program", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_failover.gen_class.ProgramLock")
     @mock.patch("mysql_rep_failover.gen_libs.help_func")
     @mock.patch("mysql_rep_failover.arg_parser")
-    def test_programlock_false(self, mock_arg, mock_help):
+    def test_programlock_false(self, mock_arg, mock_help, mock_lock):
 
         """Function:  test_programlock_false
 
@@ -116,16 +142,17 @@ class UnitTest(unittest.TestCase):
         mock_arg.arg_require.return_value = False
         mock_arg.arg_cond_req.return_value = True
         mock_arg.arg_dir_chk_crt.return_value = False
+        mock_lock.side_effect = \
+            mysql_rep_failover.gen_class.SingleInstanceException
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_rep_failover.main())
 
-    @mock.patch("mysql_rep_failover.gen_class.ProgramLock",
-                mock.Mock(side_effect=None))
     @mock.patch("mysql_rep_failover.run_program", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_failover.gen_class.ProgramLock")
     @mock.patch("mysql_rep_failover.gen_libs.help_func")
     @mock.patch("mysql_rep_failover.arg_parser")
-    def test_programlock_true(self, mock_arg, mock_help):
+    def test_programlock_true(self, mock_arg, mock_help, mock_lock):
 
         """Function:  test_programlock_true
 
@@ -141,13 +168,15 @@ class UnitTest(unittest.TestCase):
         mock_arg.arg_require.return_value = False
         mock_arg.arg_cond_req.return_value = True
         mock_arg.arg_dir_chk_crt.return_value = False
+        mock_lock.return_value = self.proglock
 
         self.assertFalse(mysql_rep_failover.main())
 
     @mock.patch("mysql_rep_failover.run_program", mock.Mock(return_value=True))
+    @mock.patch("mysql_rep_failover.gen_class.ProgramLock")
     @mock.patch("mysql_rep_failover.gen_libs.help_func")
     @mock.patch("mysql_rep_failover.arg_parser")
-    def test_arg_dir_chk_crt_false(self, mock_arg, mock_help):
+    def test_arg_dir_chk_crt_false(self, mock_arg, mock_help, mock_lock):
 
         """Function:  test_arg_dir_chk_crt_false
 
@@ -162,6 +191,7 @@ class UnitTest(unittest.TestCase):
         mock_arg.arg_require.return_value = False
         mock_arg.arg_xor_dict.return_value = True
         mock_arg.arg_dir_chk_crt.return_value = False
+        mock_lock.return_value = self.proglock
 
         self.assertFalse(mysql_rep_failover.main())
 
