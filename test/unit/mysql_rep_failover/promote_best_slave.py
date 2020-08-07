@@ -64,6 +64,8 @@ class SlaveRep(object):
         self.name = name
         self.exe_gtidset = exe_gtidset
         self.gtid_mode = gtid_mode
+        self.master = None
+        self.slave = None
 
     def remove(self, master):
 
@@ -75,6 +77,8 @@ class SlaveRep(object):
             (input) master -> Master name.
 
         """
+
+        self.master = master
 
         return True
 
@@ -88,6 +92,8 @@ class SlaveRep(object):
             (input) slave -> Slave name.
 
         """
+
+        self.slave = slave
 
         return True
 
