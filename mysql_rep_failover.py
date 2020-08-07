@@ -306,18 +306,18 @@ def gtid_enabled(slaves, **kwargs):
 
     Arguments:
         (input) slaves -> Slave instance array.
-        (output) True|False - If all slaves are GTID enabled.
+        (output) is_enabled -> True|False - If all slaves are GTID enabled.
 
     """
 
     slaves = list(slaves)
-    gtid_enabled = True
+    is_enabled = True
 
     for slv in slaves:
         if not slv.gtid_mode:
-            gtid_enabled = False
+            is_enabled = False
 
-    return gtid_enabled
+    return is_enabled
 
 
 def run_program(args_array, func_dict, **kwargs):
