@@ -74,7 +74,12 @@ Make the appropriate change to the environment.
     - host = HOST_IP
     - name = HOST_NAME
     - sid = SERVER_ID
+    - port = 3306
     - extra_def_file = 'DIRECTORY_PATH/mysql.cfg'
+  * Change these entries only if required:
+    - cfg_file = None
+    - serv_os = "Linux"
+    - port = 3306
   * Create a new set of entries for each slave in the MySQL replica set.
 
 ```
