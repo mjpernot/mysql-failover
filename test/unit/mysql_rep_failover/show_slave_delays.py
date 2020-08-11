@@ -72,7 +72,6 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
-        test_no_slave -> Test with only no slaves in list.
         test_one_slave -> Test with only one slave in list.
         test_default -> Test with default arguments only.
 
@@ -107,24 +106,6 @@ class UnitTest(unittest.TestCase):
         self.slaveorder.append((slv0.exe_gtidset, slv0))
         self.slaveorder2.append((slv1.exe_gtidset, slv1))
         self.args_array = {}
-
-    @unittest.skip("Bug:  Stacktraces with no slaves in list")
-    @mock.patch("mysql_rep_failover.order_slaves_on_gtid")
-    def test_no_slave(self, mock_order):
-
-        """Function:  test_no_slave
-
-        Description:  Test with only no slaves in list.
-
-        Arguments:
-
-        """
-
-        mock_order.return_value = []
-
-        # with gen_libs.no_std_out():
-        self.assertEqual(mysql_rep_failover.show_slave_delays(
-            [], self.args_array), (False, None))
 
     @mock.patch("mysql_rep_failover.order_slaves_on_gtid")
     def test_one_slave(self, mock_order):
