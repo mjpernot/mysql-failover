@@ -108,7 +108,6 @@ class UnitTest(unittest.TestCase):
         setUp -> Initialize testing environment.
         test_one_failed_switch -> Test switch to new master failed for 1 slave.
         test_failed_all_switch -> Test switch to new master failed for all.
-        test_no_slave -> Test with only no slaves in list.
         test_one_slave -> Test with only one slave in list.
         test_default -> Test with default arguments only.
 
@@ -170,23 +169,6 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(mysql_rep_failover.promote_best_slave(
             self.slavearray, self.args_array), (True, self.results))
-
-    @unittest.skip("Bug:  Stacktraces with no slaves in list")
-    @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
-    def test_no_slave(self, mock_switch):
-
-        """Function:  test_no_slave
-
-        Description:  Test with only no slaves in list.
-
-        Arguments:
-
-        """
-
-        mock_switch.return_value = 0
-
-        self.assertEqual(mysql_rep_failover.promote_best_slave(
-            [], self.args_array), (False, None))
 
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
     def test_one_slave(self, mock_switch):
