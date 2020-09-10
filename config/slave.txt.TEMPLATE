@@ -3,7 +3,7 @@
 # Unclassified until filled in.
 # Slave 1 Configuration
 user = USER
-passwd = PASSWORD
+japd = PASSWORD
 # MySQL DB host information
 host = HOST_IP
 name = HOST_NAME
