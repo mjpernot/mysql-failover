@@ -51,7 +51,7 @@
         Slave configuration file format (config/slave.txt.TEMPLATE)
             # Slave configuration
             user = USER
-            passwd = PASSWORD
+            japd = PASSWORD
             host = HOST_IP
             name = HOST_NAME
             sid = SERVER_ID
