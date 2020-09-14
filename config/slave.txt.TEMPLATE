@@ -4,6 +4,9 @@
 # Slave 1 Configuration
 user = USER
 japd = PASSWORD
+# Replication user information
+rep_user = REPLICATION_USER
+rep_japd = REP_PASSWORD
 # MySQL DB host information
 host = HOST_IP
 name = HOST_NAME

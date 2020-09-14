@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.2.0] - 2020-09-11
+### Changed
+- config/slave.txt.TEMPLATE:  Added rep_user and rep_japd entries to configuration file.
+- Documentation updates.
+
+
 ## [2.1.1] - 2020-08-07
 ### Fixed
 - main:  Fixed handling command line arguments from SonarQube scan finding.
