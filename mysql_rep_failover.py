@@ -191,10 +191,11 @@ def promote_designated_slave(slaves, args_array, **kwargs):
     err_flag = False
     err_msg = None
     bad_slv = []
-    master = mysql_libs.find_name(slaves, args_array["-G"])
+    new_master = mysql_libs.find_name(slaves, args_array["-G"])
 
-    if master:
-        slaves.remove(master)
+    if new_master:
+        slaves.remove(new_master)
+        master = convert_to_master(new_master, args_array)
 
         for slv in slaves:
             status_flag = mysql_libs.switch_to_master(master, slv)

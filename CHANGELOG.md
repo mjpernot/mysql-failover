@@ -9,6 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - convert_to_master:  Creates MasterRep instance from a SlaveRep instance.
 
 ### Changed
+- promote_designated_slave:  Added call to convert_to_master to convert slave instance to master instance.
 - promote_best_slave:  Added call to convert_to_master to convert slave instance to master instance.
 - config/slave.txt.TEMPLATE:  Added rep_user and rep_japd entries to configuration file.
 - Documentation updates.
