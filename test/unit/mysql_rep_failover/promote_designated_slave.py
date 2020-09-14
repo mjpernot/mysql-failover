@@ -35,6 +35,30 @@ import version
 __version__ = version.__version__
 
 
+class MasterRep(object):
+
+    """Class:  MasterRep
+
+    Description:  Class stub holder for mysql_class.MasterRep class.
+
+    Methods:
+        __init__ -> Class initialization.
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.name = "MySQL_Name"
+
+
 class SlaveRep(object):
 
     """Class:  SlaveRep
@@ -148,6 +172,8 @@ class UnitTest(unittest.TestCase):
         self.results2 = "Slaves: ['slave2'] that did not change to new master."
         self.results3 = "Slave: slave0 was not found in slave array"
 
+    @mock.patch("mysql_rep_failover.convert_to_master",
+                mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
     def test_one_failed_switch(self, mock_switch):
 
@@ -164,6 +190,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_designated_slave(
             self.slavearray, self.args_array), (True, self.results2))
 
+    @mock.patch("mysql_rep_failover.convert_to_master",
+                mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
     def test_failed_all_switch(self, mock_switch):
 
@@ -196,6 +224,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_designated_slave(
             self.slavearray, self.args_array2), (True, self.results3))
 
+    @mock.patch("mysql_rep_failover.convert_to_master",
+                mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
     def test_one_slave(self, mock_switch):
 
@@ -212,6 +242,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_designated_slave(
             self.slavearray2, self.args_array), (False, None))
 
+    @mock.patch("mysql_rep_failover.convert_to_master",
+                mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
     def test_default(self, mock_switch):
 
