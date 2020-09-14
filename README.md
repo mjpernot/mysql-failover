@@ -71,6 +71,8 @@ Make the appropriate change to the environment.
   * Change these entries in the MySQL slave setup:
     - user = USER
     - passwd = PASSWORD
+    - rep_user = REPLICATION_USER
+    - rep_japd = REP_PASSWORD
     - host = HOST_IP
     - name = HOST_NAME
     - sid = SERVER_ID
