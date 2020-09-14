@@ -297,7 +297,9 @@ def promote_best_slave(slaves, args_array, **kwargs):
     slave_list = order_slaves_on_gtid(slaves)
 
     # Best slave (new master) will be at the top.
-    _, master = slave_list.pop(0)
+    _, new_master = slave_list.pop(0)
+
+    master = convert_to_master(new_master, args_array)
 
     for _, slv in slave_list:
         status_flag = mysql_libs.switch_to_master(master, slv)
