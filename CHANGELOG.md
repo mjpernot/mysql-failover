@@ -5,6 +5,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.2.0] - 2020-09-11
+### Added
+- convert_to_master:  Creates MasterRep instance from a SlaveRep instance.
+
 ### Changed
 - config/slave.txt.TEMPLATE:  Added rep_user and rep_japd entries to configuration file.
 - Documentation updates.

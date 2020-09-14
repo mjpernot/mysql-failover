@@ -52,6 +52,8 @@
             # Slave configuration
             user = USER
             japd = PASSWORD
+            rep_user = REPLICATION_USER
+            rep_japd = REP_PASSWORD
             host = HOST_IP
             name = HOST_NAME
             sid = SERVER_ID
@@ -68,6 +70,9 @@
             of the --defaults-extra-file option (i.e. extra_def_file) in the
             database configuration file.  See below for the defaults-extra-file
             format.
+
+        NOTE 3:  The rep_user entry is the name of the Replication user that is
+            used across the replication domain.
 
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
@@ -92,6 +97,7 @@ import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
 import lib.cmds_gen as cmds_gen
+import mysql_lib.mysql_class as mysql_class
 import mysql_lib.mysql_libs as mysql_libs
 import version
 
@@ -230,6 +236,38 @@ def order_slaves_on_gtid(slaves, **kwargs):
     slave_list.sort(key=lambda item: item[0])
 
     return slave_list
+
+
+def convert_to_master(slave, args_array, **kwargs):
+
+    """Function:  convert_to_master
+
+    Description:  Creates MasterRep instance from a SlaveRep instance.
+
+    Arguments:
+        (input) slaves -> Slave instance array.
+        (input) args_array -> Array of command line options and values.
+        (output) master -> MasterRep instance.
+
+    """
+
+    slv_array = cmds_gen.create_cfg_array(args_array["-s"],
+                                          cfg_path=args_array["-d"])
+
+    for entry in slv_array:
+        if slave.name == entry["name"] and slave.port == int(entry["port"]):
+            rep_user = entry["rep_user"]
+            rep_japd = entry["rep_japd"]
+            break
+
+    master = mysql_class.MasterRep(
+        slave.name, slave.server_id, slave.sql_user, slave.sql_pass,
+        slave.machine, host=slave.host, port=slave.port,
+        defaults_file=slave.defaults_file, extra_def_file=slave.extra_def_file,
+        rep_user=rep_user, rep_japd=rep_japd)
+    master.connect()
+
+    return master
 
 
 def promote_best_slave(slaves, args_array, **kwargs):
