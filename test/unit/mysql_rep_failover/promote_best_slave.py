@@ -58,6 +58,7 @@ class MasterRep(object):
 
         self.name = "MySQL_Name"
 
+
 class SlaveRep(object):
 
     """Class:  SlaveRep
