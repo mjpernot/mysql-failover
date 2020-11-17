@@ -7,6 +7,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ## [2.2.0] - 2020-09-11
 - Updated to use the mysql_libs v5.0.0 library.
 
+### Fixed
+- config/mysql.cfg.TEMPLATE:  Point to correct socket file.
+
 ### Added
 - convert_to_master:  Creates MasterRep instance from a SlaveRep instance.
 
