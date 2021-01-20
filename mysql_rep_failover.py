@@ -134,11 +134,13 @@ def show_slave_delays(slaves, args_array, **kwargs):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
-        (output) True|False -> if an error has occurred.
-        (output) -> Error message.
+        (output) err_flag -> True|False - if an error has occurred.
+        (output) err_msg -> Error message.
 
     """
 
+    err_flag = False
+    err_msg = None
     args_array = dict(args_array)
     slaves = list(slaves)
     slave_list = order_slaves_on_gtid(slaves)
@@ -148,7 +150,7 @@ def show_slave_delays(slaves, args_array, **kwargs):
     for gtid, slv in slave_list:
         print("\tSlave: {0}\tGTID Pos: {1}".format(slv.name, gtid))
 
-    return False, None
+    return err_flag, err_msg
 
 
 def show_best_slave(slaves, args_array, **kwargs):
@@ -160,17 +162,19 @@ def show_best_slave(slaves, args_array, **kwargs):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
-        (output) True|False -> if an error has occurred.
-        (output) -> Error message.
+        (output) err_flag -> True|False - if an error has occurred.
+        (output) err_msg -> Error message.
 
     """
 
+    err_flag = False
+    err_msg = None
     args_array = dict(args_array)
     slaves = list(slaves)
     _, best_slv = order_slaves_on_gtid(slaves).pop(0)
     print("Best Slave: %s" % (best_slv.name))
 
-    return False, None
+    return err_flag, err_msg
 
 
 def promote_designated_slave(slaves, args_array, **kwargs):
