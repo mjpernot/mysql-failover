@@ -16,30 +16,36 @@
     WARNING:  This program will allow the changing of the slaves databases to
         new replication configurations, but it does not update the
         slave configuration files or creates new master configuration
-        files.  This must be done outside the scope of this program.
+        files.  This is done outside the scope of this program.
 
     Usage:
-        mysql_rep_failover.py -s [path/]file -d path [-F | -G name | -B | -D]
-        [-y flavor_id] [-v | -h]
+        mysql_rep_failover.py -s [path/]file -d path
+            {-F | -G name | -B | -D}
+            [-y flavor_id] [-v | -h]
 
     Arguments:
-        -s file => Slave config file.  Will be a text file.  Include the
-            file extension with the name.  Can include the path or use
-            the -d option path.  Required arg.
+        -s [path/]file => Slave config file.  Will be a text file.  Include the
+            file extension with the name.  Can include the path or use the -d
+            option path.  Required arg.
         -d dir path => Directory path to the config files. Required arg.
+
         -F => Select the best slave within the replication set and promote it
             to master and make all other slaves change to the new master.
+
         -G name => Take the designated name of the slave and promote it
             to master and make all other slaves change to the new master.
             WARNING:  This option could result in loss of transactions
                 in the replication set as this option will override the best
                 slave promotion and could possibly make a slave which is
                 behind the rest of the slaves a master database.
+
         -B => Displays the name of the current best slave in the
             replication set based on it's current positions compared
             with the other slaves in the set.
+
         -D => Shows the slaves in the replication set from best to
             worst and displays the differences.
+
         -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
         -h => Help and usage message.
@@ -52,8 +58,8 @@
             # Slave configuration
             user = USER
             japd = PASSWORD
-            rep_user = REPLICATION_USER
-            rep_japd = REP_PASSWORD
+            rep_user = REP_USER
+            rep_japd = REP_PSWORD
             host = HOST_IP
             name = HOST_NAME
             sid = SERVER_ID
