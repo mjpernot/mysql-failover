@@ -66,13 +66,12 @@ pip install -r requirements-python-lib.txt --target mysql_lib/lib --trusted-host
 
 # Configuration:
 
-Create a MySQL slave configuration file.
-Make the appropriate change to the environment.
+Create a MySQL slave configuration file.  Make the appropriate change to the environment.
   * Change these entries in the MySQL slave setup:
     - user = USER
-    - passwd = PASSWORD
-    - rep_user = REPLICATION_USER
-    - rep_japd = REP_PASSWORD
+    - japd = PSWORD
+    - rep_user = REP_USER
+    - rep_japd = REP_PSWORD
     - host = HOST_IP
     - name = HOST_NAME
     - sid = SERVER_ID
@@ -90,18 +89,13 @@ vim slave.txt
 chmod 600 slave.txt
 ```
 
-Create MySQL definition file.
+Create MySQL definition file.  Make the appropriate change to the MySQL definition setup.
+  * Change these entries in the MySQL configuration file:
+    - password="PASSWORD"
+    - socket=DIRECTORY_PATH/mysql.sock
 
 ```
 cp mysql.cfg.TEMPLATE mysql.cfg
-```
-
-Make the appropriate change to the MySQL definition setup.
-  * Change these entries in the MySQL configuration file:
-    - password="PASSWORD"
-    - socket=MYSQL_DIRECTORY/mysql.sock
-
-```
 vim mysql.cfg
 chmod 600 mysql.cfg
 ```
