@@ -148,7 +148,7 @@ def show_slave_delays(slaves, args_array, **kwargs):
     print("Best Slave: {0}\tGTID Pos: {1}".format(slv.name, gtid))
 
     for gtid, slv in slave_list:
-        print("\tSlave: {0}\tGTID Pos: {1}".format(slv.name, gtid))
+        print("     Slave: {0}\tGTID Pos: {1}".format(slv.name, gtid))
 
     return err_flag, err_msg
 
