@@ -47,7 +47,12 @@ def show_slave_delays(slaves, args_array):
 
     """
 
-    return True, "Error Message"
+    status = True
+
+    if slaves and args_array:
+        status = True
+
+    return status, "Error Message"
 
 
 def show_best_slave(slaves, args_array):
@@ -62,7 +67,12 @@ def show_best_slave(slaves, args_array):
 
     """
 
-    return False, None
+    status = False
+
+    if slaves and args_array:
+        status = False
+
+    return status, None
 
 
 class SlaveRep(object):

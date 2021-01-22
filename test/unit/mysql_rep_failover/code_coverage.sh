@@ -8,6 +8,7 @@ coverage erase
 
 echo ""
 echo "Running unit test modules in conjunction with coverage"
+coverage run -a --source=mysql_rep_failover test/unit/mysql_rep_failover/convert_to_master.py
 coverage run -a --source=mysql_rep_failover test/unit/mysql_rep_failover/create_instances.py
 coverage run -a --source=mysql_rep_failover test/unit/mysql_rep_failover/gtid_enabled.py
 coverage run -a --source=mysql_rep_failover test/unit/mysql_rep_failover/help_message.py

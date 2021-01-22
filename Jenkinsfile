@@ -22,6 +22,7 @@ pipeline {
                 source test_env/bin/activate
                 pip2 install mock==2.0.0 --user
                 pip2 install mysql-connector-python==8.0.16 --user
+                ./test/unit/mysql_rep_failover/convert_to_master.py
                 ./test/unit/mysql_rep_failover/create_instances.py
                 ./test/unit/mysql_rep_failover/gtid_enabled.py
                 ./test/unit/mysql_rep_failover/help_message.py
@@ -55,32 +56,32 @@ pipeline {
             steps {
                 script {
                     server = Artifactory.server('Artifactory')
-                    server.credentialsId = 'svc-highpoint-artifactory'
+                    server.credentialsId = 'art-svc-highpoint-dev'
                     uploadSpec = """{
                         "files": [
                             {
                                 "pattern": "./*.py",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/mysql-failover/"
+                                "target": "pypi-proj-local/highpoint/mysql-failover/"
                             },
                             {
                                 "pattern": "./*.txt",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/mysql-failover/"
+                                "target": "pypi-proj-local/highpoint/mysql-failover/"
                             },
                             {
                                 "pattern": "./*.md",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/mysql-failover/"
+                                "target": "pypi-proj-local/highpoint/mysql-failover/"
                             },
                             {
                                 "pattern": "*.TEMPLATE",
                                 "recursive": true,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/mysql-failover/config/"
+                                "target": "pypi-proj-local/highpoint/mysql-failover/config/"
                             }
                         ]
                     }"""

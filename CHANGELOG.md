@@ -4,6 +4,39 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.2.0] - 2020-09-11
+- Updated to use the mysql_libs v5.0.0 library.
+- Validated to work with (much older) mysql.connector v1.1.6 library module.
+
+### Fixed
+- config/mysql.cfg.TEMPLATE:  Point to correct socket file.
+
+### Added
+- convert_to_master:  Creates MasterRep instance from a SlaveRep instance.
+
+### Changed
+- show_slave_delays:  Updated formatting of output.
+- show_slave_delays, show_best_slave:  Added return status code.
+- promote_designated_slave:  Added call to convert_to_master to convert slave instance to master instance.
+- promote_best_slave:  Added call to convert_to_master to convert slave instance to master instance.
+- config/slave.txt.TEMPLATE:  Added rep_user and rep_japd entries to configuration file.
+- Documentation updates.
+
+
+## [2.1.1] - 2020-08-07
+### Fixed
+- main:  Fixed handling command line arguments from SonarQube scan finding.
+
+### Changed
+- config/slave.txt.TEMPLATE:  Changed configuration entry name.
+- show_best_slave:  Changed variables to a placeholder variables.
+- order_slaves_on_gtid:  Changed variable name to standard naming convention.
+- promote_best_slave:  Changed variables to a placeholder variables.
+- gtid_enabled:  Changed variable name to possible naming conflict.
+- run_program:  Changed variable name to standard naming convention.
+- Documentation updates.
+
+
 ## [2.1.0] - 2020-01-10
 ### Fixed
 - promote_designated_slave:  Cannot reference class if slave not found in array.

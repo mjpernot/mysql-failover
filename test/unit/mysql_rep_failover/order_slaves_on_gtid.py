@@ -25,12 +25,10 @@ else:
     import unittest
 
 # Third-party
-import mock
 
 # Local
 sys.path.append(os.getcwd())
 import mysql_rep_failover
-import lib.gen_libs as gen_libs
 import version
 
 __version__ = version.__version__
@@ -64,6 +62,8 @@ class SlaveRep(object):
         self.name = name
         self.exe_gtidset = exe_gtidset
         self.gtid_mode = gtid_mode
+        self.master = None
+        self.slave = None
 
     def remove(self, master):
 
@@ -75,6 +75,8 @@ class SlaveRep(object):
             (input) master -> Master name.
 
         """
+
+        self.master = master
 
         return True
 
@@ -88,6 +90,8 @@ class SlaveRep(object):
             (input) slave -> Slave name.
 
         """
+
+        self.slave = slave
 
         return True
 

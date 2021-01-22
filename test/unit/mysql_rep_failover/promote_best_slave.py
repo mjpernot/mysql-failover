@@ -30,10 +30,33 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import mysql_rep_failover
-import lib.gen_libs as gen_libs
 import version
 
 __version__ = version.__version__
+
+
+class MasterRep(object):
+
+    """Class:  MasterRep
+
+    Description:  Class stub holder for mysql_class.MasterRep class.
+
+    Methods:
+        __init__ -> Class initialization.
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.name = "MySQL_Name"
 
 
 class SlaveRep(object):
@@ -64,6 +87,8 @@ class SlaveRep(object):
         self.name = name
         self.exe_gtidset = exe_gtidset
         self.gtid_mode = gtid_mode
+        self.master = None
+        self.slave = None
 
     def remove(self, master):
 
@@ -75,6 +100,8 @@ class SlaveRep(object):
             (input) master -> Master name.
 
         """
+
+        self.master = master
 
         return True
 
@@ -89,6 +116,8 @@ class SlaveRep(object):
 
         """
 
+        self.slave = slave
+
         return True
 
 
@@ -102,7 +131,6 @@ class UnitTest(unittest.TestCase):
         setUp -> Initialize testing environment.
         test_one_failed_switch -> Test switch to new master failed for 1 slave.
         test_failed_all_switch -> Test switch to new master failed for all.
-        test_no_slave -> Test with only no slaves in list.
         test_one_slave -> Test with only one slave in list.
         test_default -> Test with default arguments only.
 
@@ -133,6 +161,8 @@ class UnitTest(unittest.TestCase):
             "Slaves: ['slave3', 'slave1'] that did not change to new master."
         self.results2 = "Slaves: ['slave3'] that did not change to new master."
 
+    @mock.patch("mysql_rep_failover.convert_to_master",
+                mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
     def test_one_failed_switch(self, mock_switch):
 
@@ -149,6 +179,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_best_slave(
             self.slavearray, self.args_array), (True, self.results2))
 
+    @mock.patch("mysql_rep_failover.convert_to_master",
+                mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
     def test_failed_all_switch(self, mock_switch):
 
@@ -165,23 +197,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_best_slave(
             self.slavearray, self.args_array), (True, self.results))
 
-    @unittest.skip("Bug:  Stacktraces with no slaves in list")
-    @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
-    def test_no_slave(self, mock_switch):
-
-        """Function:  test_no_slave
-
-        Description:  Test with only no slaves in list.
-
-        Arguments:
-
-        """
-
-        mock_switch.return_value = 0
-
-        self.assertEqual(mysql_rep_failover.promote_best_slave(
-            [], self.args_array), (False, None))
-
+    @mock.patch("mysql_rep_failover.convert_to_master",
+                mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
     def test_one_slave(self, mock_switch):
 
@@ -198,6 +215,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_best_slave(
             self.slavearray2, self.args_array), (False, None))
 
+    @mock.patch("mysql_rep_failover.convert_to_master",
+                mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
     def test_default(self, mock_switch):
 
