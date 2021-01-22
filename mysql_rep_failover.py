@@ -13,10 +13,10 @@
         require a master replication configuration file, only a slave
         configuration file.
 
-    WARNING:  This program will allow the changing of the slaves databases to
-        new replication configurations, but it does not update the
-        slave configuration files or creates new master configuration
-        files.  This is done outside the scope of this program.
+    NOTE:  This program will allow the changing of the slaves databases to new
+        replication configurations, but it does not update the slave
+        configuration file or creates a new master configuration file.  This is
+        done outside the scope of this program.
 
     Usage:
         mysql_rep_failover.py -s [path/]file -d path
