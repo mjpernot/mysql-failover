@@ -13,33 +13,39 @@
         require a master replication configuration file, only a slave
         configuration file.
 
-    WARNING:  This program will allow the changing of the slaves databases to
-        new replication configurations, but it does not update the
-        slave configuration files or creates new master configuration
-        files.  This must be done outside the scope of this program.
+    NOTE:  This program will allow the changing of the slaves databases to new
+        replication configurations, but it does not update the slave
+        configuration file or creates a new master configuration file.  This is
+        done outside the scope of this program.
 
     Usage:
-        mysql_rep_failover.py -s [path/]file -d path [-F | -G name | -B | -D]
-        [-y flavor_id] [-v | -h]
+        mysql_rep_failover.py -s [path/]file -d path
+            {-F | -G name | -B | -D}
+            [-y flavor_id] [-v | -h]
 
     Arguments:
-        -s file => Slave config file.  Will be a text file.  Include the
-            file extension with the name.  Can include the path or use
-            the -d option path.  Required arg.
+        -s [path/]file => Slave config file.  Will be a text file.  Include the
+            file extension with the name.  Can include the path or use the -d
+            option path.  Required arg.
         -d dir path => Directory path to the config files. Required arg.
+
         -F => Select the best slave within the replication set and promote it
             to master and make all other slaves change to the new master.
+
         -G name => Take the designated name of the slave and promote it
             to master and make all other slaves change to the new master.
             WARNING:  This option could result in loss of transactions
                 in the replication set as this option will override the best
                 slave promotion and could possibly make a slave which is
                 behind the rest of the slaves a master database.
+
         -B => Displays the name of the current best slave in the
             replication set based on it's current positions compared
             with the other slaves in the set.
+
         -D => Shows the slaves in the replication set from best to
             worst and displays the differences.
+
         -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
         -h => Help and usage message.
@@ -48,16 +54,18 @@
         NOTE 2:  -F, -G, -B, and -D are XOR arguments.
 
     Notes:
-        Slave configuration file format (slave.txt.TEMPLATE)
+        Slave configuration file format (config/slave.txt.TEMPLATE)
             # Slave configuration
-            user = root
-            passwd = ROOT_PASSWORD
-            host = IP_ADDRESS
-            serv_os = Linux or Solaris
-            name = HOSTNAME
-            port = PORT_NUMBER
-            cfg_file DIRECTORY_PATH/my.cnf
+            user = USER
+            japd = PASSWORD
+            rep_user = REP_USER
+            rep_japd = REP_PSWORD
+            host = HOST_IP
+            name = HOST_NAME
             sid = SERVER_ID
+            cfg_file = None
+            port = 3306
+            serv_os = Linux
             extra_def_file = DIRECTORY_PATH/mysql.cfg
 
         NOTE 1:  Include the cfg_file even if running remotely as the file will
@@ -69,10 +77,13 @@
             database configuration file.  See below for the defaults-extra-file
             format.
 
-        Defaults Extra File format (mysql.cfg.TEMPLATE):
+        NOTE 3:  The rep_user entry is the name of the Replication user that is
+            used across the replication domain.
+
+        Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
-            password="ROOT_PASSWORD"
-            socket="DIRECTORY_PATH/mysql.sock"
+            password="PASSWORD"
+            socket="MYSQL_DIRECTORY/mysql.sock"
 
         NOTE:  The socket information can be obtained from the my.cnf
             file under ~/mysql directory.
@@ -92,6 +103,7 @@ import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
 import lib.cmds_gen as cmds_gen
+import mysql_lib.mysql_class as mysql_class
 import mysql_lib.mysql_libs as mysql_libs
 import version
 
@@ -122,11 +134,13 @@ def show_slave_delays(slaves, args_array, **kwargs):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
-        (output) True|False -> if an error has occurred.
-        (output) -> Error message.
+        (output) err_flag -> True|False - if an error has occurred.
+        (output) err_msg -> Error message.
 
     """
 
+    err_flag = False
+    err_msg = None
     args_array = dict(args_array)
     slaves = list(slaves)
     slave_list = order_slaves_on_gtid(slaves)
@@ -134,9 +148,9 @@ def show_slave_delays(slaves, args_array, **kwargs):
     print("Best Slave: {0}\tGTID Pos: {1}".format(slv.name, gtid))
 
     for gtid, slv in slave_list:
-        print("\tSlave: {0}\tGTID Pos: {1}".format(slv.name, gtid))
+        print("     Slave: {0}\tGTID Pos: {1}".format(slv.name, gtid))
 
-    return False, None
+    return err_flag, err_msg
 
 
 def show_best_slave(slaves, args_array, **kwargs):
@@ -148,17 +162,19 @@ def show_best_slave(slaves, args_array, **kwargs):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
-        (output) True|False -> if an error has occurred.
-        (output) -> Error message.
+        (output) err_flag -> True|False - if an error has occurred.
+        (output) err_msg -> Error message.
 
     """
 
+    err_flag = False
+    err_msg = None
     args_array = dict(args_array)
     slaves = list(slaves)
-    __, best_slv = order_slaves_on_gtid(slaves).pop(0)
+    _, best_slv = order_slaves_on_gtid(slaves).pop(0)
     print("Best Slave: %s" % (best_slv.name))
 
-    return False, None
+    return err_flag, err_msg
 
 
 def promote_designated_slave(slaves, args_array, **kwargs):
@@ -185,10 +201,11 @@ def promote_designated_slave(slaves, args_array, **kwargs):
     err_flag = False
     err_msg = None
     bad_slv = []
-    master = mysql_libs.find_name(slaves, args_array["-G"])
+    new_master = mysql_libs.find_name(slaves, args_array["-G"])
 
-    if master:
-        slaves.remove(master)
+    if new_master:
+        slaves.remove(new_master)
+        master = convert_to_master(new_master, args_array)
 
         for slv in slaves:
             status_flag = mysql_libs.switch_to_master(master, slv)
@@ -227,9 +244,41 @@ def order_slaves_on_gtid(slaves, **kwargs):
     for slv in slaves:
         slave_list.append((slv.exe_gtidset, slv))
 
-    slave_list.sort(key=lambda x: x[0])
+    slave_list.sort(key=lambda item: item[0])
 
     return slave_list
+
+
+def convert_to_master(slave, args_array, **kwargs):
+
+    """Function:  convert_to_master
+
+    Description:  Creates MasterRep instance from a SlaveRep instance.
+
+    Arguments:
+        (input) slaves -> Slave instance array.
+        (input) args_array -> Array of command line options and values.
+        (output) master -> MasterRep instance.
+
+    """
+
+    slv_array = cmds_gen.create_cfg_array(args_array["-s"],
+                                          cfg_path=args_array["-d"])
+
+    for entry in slv_array:
+        if slave.name == entry["name"] and slave.port == int(entry["port"]):
+            rep_user = entry["rep_user"]
+            rep_japd = entry["rep_japd"]
+            break
+
+    master = mysql_class.MasterRep(
+        slave.name, slave.server_id, slave.sql_user, slave.sql_pass,
+        slave.machine, host=slave.host, port=slave.port,
+        defaults_file=slave.defaults_file, extra_def_file=slave.extra_def_file,
+        rep_user=rep_user, rep_japd=rep_japd)
+    master.connect()
+
+    return master
 
 
 def promote_best_slave(slaves, args_array, **kwargs):
@@ -259,9 +308,11 @@ def promote_best_slave(slaves, args_array, **kwargs):
     slave_list = order_slaves_on_gtid(slaves)
 
     # Best slave (new master) will be at the top.
-    __, master = slave_list.pop(0)
+    _, new_master = slave_list.pop(0)
 
-    for __, slv in slave_list:
+    master = convert_to_master(new_master, args_array)
+
+    for _, slv in slave_list:
         status_flag = mysql_libs.switch_to_master(master, slv)
 
         if status_flag == -1:
@@ -283,7 +334,7 @@ def create_instances(args_array, **kwargs):
 
     Arguments:
         (input) args_array -> Array of command line options and values.
-        (output) SLAVE -> Slave instance array.
+        (output) slaves -> List of slave instances.
 
     """
 
@@ -306,18 +357,18 @@ def gtid_enabled(slaves, **kwargs):
 
     Arguments:
         (input) slaves -> Slave instance array.
-        (output) True|False - If all slaves are GTID enabled.
+        (output) is_enabled -> True|False - If all slaves are GTID enabled.
 
     """
 
     slaves = list(slaves)
-    gtid_enabled = True
+    is_enabled = True
 
     for slv in slaves:
         if not slv.gtid_mode:
-            gtid_enabled = False
+            is_enabled = False
 
-    return gtid_enabled
+    return is_enabled
 
 
 def run_program(args_array, func_dict, **kwargs):
@@ -339,8 +390,8 @@ def run_program(args_array, func_dict, **kwargs):
     if slaves and gtid_enabled(slaves):
 
         # Call function(s) - intersection of command line and function dict.
-        for x in set(args_array.keys()) & set(func_dict.keys()):
-            err_flag, err_msg = func_dict[x](slaves, args_array)
+        for item in set(args_array.keys()) & set(func_dict.keys()):
+            err_flag, err_msg = func_dict[item](slaves, args_array)
 
             if err_flag:
                 print(err_msg)
@@ -371,6 +422,7 @@ def main():
 
     """
 
+    cmdline = gen_libs.get_inst(sys)
     dir_chk_list = ["-d"]
     func_dict = {"-B": show_best_slave, "-D": show_slave_delays,
                  "-F": promote_best_slave, "-G": promote_designated_slave}
@@ -380,7 +432,7 @@ def main():
                     "-F": ["-B", "-D", "-G"], "-G": ["-B", "-D", "-F"]}
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list)
+    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and not arg_parser.arg_require(args_array, opt_req_list) \
@@ -388,7 +440,7 @@ def main():
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
 
         try:
-            prog_lock = gen_class.ProgramLock(sys.argv,
+            prog_lock = gen_class.ProgramLock(cmdline.argv,
                                               args_array.get("-y", ""))
             run_program(args_array, func_dict)
             del prog_lock

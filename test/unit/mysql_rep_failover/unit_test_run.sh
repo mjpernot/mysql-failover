@@ -6,6 +6,7 @@
 
 echo ""
 echo "Unit testing..."
+test/unit/mysql_rep_failover/convert_to_master.py
 test/unit/mysql_rep_failover/create_instances.py
 test/unit/mysql_rep_failover/gtid_enabled.py
 test/unit/mysql_rep_failover/help_message.py
