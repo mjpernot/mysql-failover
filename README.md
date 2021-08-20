@@ -35,7 +35,7 @@
 # Installation:
 
 Install this project using git.
-  * Replace **{Python_Project}** with the baseline path of the python program.
+  * From here on out, any reference to **{Python_Project}** or **PYTHON_PROJECT** replace with the baseline path of the python program.
 
 ```
 umask 022
@@ -74,10 +74,12 @@ Create a MySQL slave configuration file.  Make the appropriate change to the env
     - sid = SERVER_ID
     - port = 3306
     - extra_def_file = 'DIRECTORY_PATH/mysql.cfg'
+
   * Change these entries only if required:
     - cfg_file = None
     - serv_os = "Linux"
     - port = 3306
+
   * Create a new set of entries for each slave in the MySQL replica set.
 
 ```
@@ -101,7 +103,6 @@ chmod 600 mysql.cfg
 # Program Help Function:
 
   The program has a -h (Help option) that will show display an usage message.  The help message will usually consist of a description, usage, arugments to the program, example, notes about the program, and any known bugs not yet fixed.  To run the help command:
-  * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
 {Python_Project}/mysql-failover/mysql_rep_failover.py -h
@@ -114,37 +115,9 @@ chmod 600 mysql.cfg
 
 ### Installation:
 
-Install this project using git.
-  * Replace **{Python_Project}** with the baseline path of the python program.
-  * Replace **{Branch_Name}** with the name of the Git branch being tested.  See Git Merge Request.
-
-```
-umask 022
-cd {Python_Project}
-git clone --branch {Branch_Name} git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/mysql-failover.git
-```
-
-Install/upgrade system modules.
-
-```
-cd mysql-failover
-sudo bash
-umask 022
-pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
-exit
-```
-
-Install supporting classes and libraries.
-
-```
-pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-mysql-lib.txt --target mysql_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-python-lib.txt --target mysql_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
-```
-
+Install the project using the procedures in the Installation section.
 
 # Unit test runs for mysql_rep_failover.py:
-  * Replace **{Python_Project}** with the baseline path of the python program.
 
 ### Testing:
 
