@@ -66,27 +66,44 @@
             cfg_file = None
             port = 3306
             serv_os = Linux
-            extra_def_file = DIRECTORY_PATH/mysql.cfg
+            extra_def_file = PYTHON_PROJECT/mysql.cfg
+
+            # If SSL connections are being used, configure one or more of these
+                entries:
+            ssl_client_ca = None
+            ssl_client_key = None
+            ssl_client_cert = None
+
+            # Only changes these if necessary and have knowledge in MySQL
+                SSL configuration setup:
+            ssl_client_flag = None
+            ssl_disabled = False
+            ssl_verify_id = False
+            ssl_verify_cert = False
 
         NOTE 1:  Include the cfg_file even if running remotely as the file will
             be used in future releases.
-
         NOTE 2:  In MySQL 5.6 - it now gives warning if password is passed on
             the command line.  To suppress this warning, will require the use
             of the --defaults-extra-file option (i.e. extra_def_file) in the
             database configuration file.  See below for the defaults-extra-file
             format.
-
         NOTE 3:  The rep_user entry is the name of the Replication user that is
             used across the replication domain.
 
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
             password="PASSWORD"
-            socket="MYSQL_DIRECTORY/mysql.sock"
+            socket="DIRECTORY_PATH/mysqld.sock"
 
-        NOTE:  The socket information can be obtained from the my.cnf
+        NOTE 1:  The socket information can be obtained from the my.cnf
             file under ~/mysql directory.
+        NOTE 2:  The --defaults-extra-file option will be overridden if there
+            is a ~/.my.cnf or ~/.mylogin.cnf file located in the home directory
+            of the user running this program.  The extras file will in effect
+            be ignored.
+        NOTE 3:  Socket use is only required to be set in certain conditions
+            when connecting using localhost.
 
     Example:
         mysql_rep_failover.py -s slaves.txt -d config -F
