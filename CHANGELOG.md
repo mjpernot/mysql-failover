@@ -9,6 +9,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to work in a SSL environment.
 - Updated to use the mysql_libs v5.2.2 library.
 
+### Changed
+- config/mysql.cfg.TEMPLATE:  Point to correct socket file.
+
 
 ## [2.2.0] - 2020-09-11
 - Updated to use the mysql_libs v5.0.0 library.
