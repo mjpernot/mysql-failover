@@ -141,7 +141,7 @@ def help_message():
     print(__doc__)
 
 
-def show_slave_delays(slaves, args_array, **kwargs):
+def show_slave_delays(slaves, args_array):
 
     """Function:  show_slave_delays
 
@@ -170,7 +170,7 @@ def show_slave_delays(slaves, args_array, **kwargs):
     return err_flag, err_msg
 
 
-def show_best_slave(slaves, args_array, **kwargs):
+def show_best_slave(slaves, args_array):
 
     """Function:  show_best_slave
 
@@ -194,7 +194,7 @@ def show_best_slave(slaves, args_array, **kwargs):
     return err_flag, err_msg
 
 
-def promote_designated_slave(slaves, args_array, **kwargs):
+def promote_designated_slave(slaves, args_array):
 
     """Function:  promote_designated_slave
 
@@ -242,7 +242,7 @@ def promote_designated_slave(slaves, args_array, **kwargs):
     return err_flag, err_msg
 
 
-def order_slaves_on_gtid(slaves, **kwargs):
+def order_slaves_on_gtid(slaves):
 
     """Function:  order_slaves_on_gtid
 
@@ -266,7 +266,7 @@ def order_slaves_on_gtid(slaves, **kwargs):
     return slave_list
 
 
-def convert_to_master(slave, args_array, **kwargs):
+def convert_to_master(slave, args_array):
 
     """Function:  convert_to_master
 
@@ -298,7 +298,7 @@ def convert_to_master(slave, args_array, **kwargs):
     return master
 
 
-def promote_best_slave(slaves, args_array, **kwargs):
+def promote_best_slave(slaves, args_array):
 
     """Function:  promote_best_slave
 
@@ -342,7 +342,7 @@ def promote_best_slave(slaves, args_array, **kwargs):
     return err_flag, err_msg
 
 
-def create_instances(args_array, **kwargs):
+def create_instances(args_array):
 
     """Function:  create_instances
 
@@ -366,7 +366,7 @@ def create_instances(args_array, **kwargs):
     return slaves
 
 
-def gtid_enabled(slaves, **kwargs):
+def gtid_enabled(slaves):
 
     """Function:  gtid_enabled
 
@@ -388,7 +388,7 @@ def gtid_enabled(slaves, **kwargs):
     return is_enabled
 
 
-def run_program(args_array, func_dict, **kwargs):
+def run_program(args_array, func_dict):
 
     """Function:  run_program
 
