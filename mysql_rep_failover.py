@@ -414,7 +414,7 @@ def run_program(args_array, func_dict, **kwargs):
                 print(err_msg)
                 break
 
-        cmds_gen.disconnect(slaves)
+        mysql_libs.disconnect(slaves)
 
     else:
         print("Error:  Empty Slave array or Slave(s) not GTID enabled.")
