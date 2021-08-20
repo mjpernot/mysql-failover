@@ -28,11 +28,8 @@
     - python-pip
 
   * Local class/library dependencies within the program structure.
-    - lib/cmds_gen
-    - lib/arg_parser
-    - lib/gen_libs
-    - lib/gen_class
-    - mysql_lib/mysql_libs
+    - python-lib
+    - mysql-lib
 
 
 # Installation:
