@@ -42,7 +42,7 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -53,9 +53,9 @@ class SlaveRep(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) name -> Name of slave.
-            (input) exe_gtidset -> GTID position.
-            (input) gtid_mode -> True|False - GTID is turned on.
+            (input) name
+            (input) exe_gtidset
+            (input) gtid_mode
 
         """
 
@@ -71,9 +71,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_one_slave -> Test with only one slave in list.
-        test_default -> Test with default arguments only.
+        setUp
+        test_one_slave
+        test_default
 
     """
 

@@ -42,8 +42,8 @@ def show_slave_delays(slaves, args_array):
     Description:  Stub holder for mysql_rep_failover.show_slave_delays func.
 
     Arguments:
-        (input) slaves -> List of slave connections.
-        (input) args_array -> Array of command line options and values.
+        (input) slaves
+        (input) args_array
 
     """
 
@@ -62,8 +62,8 @@ def show_best_slave(slaves, args_array):
     Description:  Stub holder for mysql_rep_failover.show_best_slave function.
 
     Arguments:
-        (input) slaves -> List of slave connections.
-        (input) args_array -> Array of command line options and values.
+        (input) slaves
+        (input) args_array
 
     """
 
@@ -82,7 +82,7 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -93,9 +93,9 @@ class SlaveRep(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) name -> Name of slave.
-            (input) exe_gtidset -> GTID position.
-            (input) gtid_mode -> True|False - GTID is turned on.
+            (input) name
+            (input) exe_gtidset
+            (input) gtid_mode
 
         """
 
@@ -111,11 +111,11 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_function_fails -> Test with function failing.
-        test_not_gtid_enabled -> Test with gtid not enabled.
-        test_no_slaves -> Test with no slaves in list.
-        test_run_program -> Test with only default arguments passed.
+        setUp
+        test_function_fails
+        test_not_gtid_enabled
+        test_no_slaves
+        test_run_program
 
     """
 
