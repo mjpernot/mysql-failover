@@ -14,7 +14,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - main:  Setup slv_key dictionary.
 - convert_to_master, create_instances:  Changed cmds_gen.create_cfg_array to gen_libs.create_cfg_array.
 - Removed unnecessary \*\*kwargs in function argument list.
-- run_program:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
+- run_program:  Replaced cmds_gen.disconnect with mysql_libs.disconnect and add \*\*kwargs to parameter list and pass to create_instances and called function.
 - config/slave.txt.TEMPLATE: Added SSL configuration options.
 - config/mysql.cfg.TEMPLATE:  Point to correct socket file.
 
