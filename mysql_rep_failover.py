@@ -446,6 +446,11 @@ def main():
     opt_val_list = ["-d", "-s", "-G", "-y"]
     opt_xor_dict = {"-B": ["-D", "-F", "-G"], "-D": ["-B", "-F", "-G"],
                     "-F": ["-B", "-D", "-G"], "-G": ["-B", "-D", "-F"]}
+    slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
+               "ssl_client_ca": "None", "ssl_ca_path": "None",
+               "ssl_client_key": "None", "ssl_client_cert": "None",
+               "ssl_client_flag": "int", "ssl_disabled": "bool",
+               "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
@@ -458,7 +463,7 @@ def main():
         try:
             prog_lock = gen_class.ProgramLock(cmdline.argv,
                                               args_array.get("-y", ""))
-            run_program(args_array, func_dict)
+            run_program(args_array, func_dict, slv_key=slv_key)
             del prog_lock
 
         except gen_class.SingleInstanceException:
