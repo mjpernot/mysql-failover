@@ -271,7 +271,7 @@ def order_slaves_on_gtid(slaves):
     return slave_list
 
 
-def convert_to_master(slave, args_array):
+def convert_to_master(slave, args_array, **kwargs):
 
     """Function:  convert_to_master
 
@@ -280,12 +280,15 @@ def convert_to_master(slave, args_array):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) master -> MasterRep instance.
 
     """
 
     slv_array = gen_libs.create_cfg_array(args_array["-s"],
                                           cfg_path=args_array["-d"])
+    slv_array = gen_libs.transpose_dict(slv_array, kwargs.get("slv_key", {}))
 
     for entry in slv_array:
         if slave.name == entry["name"] and slave.port == int(entry["port"]):
