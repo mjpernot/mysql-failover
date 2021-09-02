@@ -119,7 +119,6 @@ import sys
 import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
-import lib.cmds_gen as cmds_gen
 import mysql_lib.mysql_class as mysql_class
 import mysql_lib.mysql_libs as mysql_libs
 import version
@@ -279,7 +278,7 @@ def convert_to_master(slave, args_array):
 
     """
 
-    slv_array = cmds_gen.create_cfg_array(args_array["-s"],
+    slv_array = gen_libs.create_cfg_array(args_array["-s"],
                                           cfg_path=args_array["-d"])
 
     for entry in slv_array:
@@ -359,7 +358,7 @@ def create_instances(args_array):
     slaves = []
 
     # Parse the slave config file.
-    slv_array = cmds_gen.create_cfg_array(args_array["-s"],
+    slv_array = gen_libs.create_cfg_array(args_array["-s"],
                                           cfg_path=args_array["-d"])
     slaves = mysql_libs.create_slv_array(slv_array)
 
