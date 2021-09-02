@@ -11,6 +11,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to use gen_libs v2.8.4 library.
 
 ### Changed
+- promote_designated_slave, promote_best_slave:  Added \*\*kwargs to parameter list and pass to convert_to_master function.
 - show_best_slave, show_slave_delays:  Added \*\*kwargs to parameter list.
 - create_instances:  Receive slv_key argument and call gen_libs.transpose_dict function.
 - main:  Setup slv_key dictionary.
