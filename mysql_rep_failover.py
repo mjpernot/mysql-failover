@@ -197,7 +197,7 @@ def show_best_slave(slaves, args_array, **kwargs):
     return err_flag, err_msg
 
 
-def promote_designated_slave(slaves, args_array):
+def promote_designated_slave(slaves, args_array, **kwargs):
 
     """Function:  promote_designated_slave
 
@@ -213,6 +213,8 @@ def promote_designated_slave(slaves, args_array):
         (input) args_array -> Array of command line options and values.
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
 
     """
 
