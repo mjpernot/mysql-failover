@@ -8,12 +8,21 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to work in MySQL 8.0 and 5.7 environments.
 - Updated to work in a SSL environment.
 - Updated to use the mysql_libs v5.2.2 library.
+- Updated to use gen_libs v2.8.4 library.
 
 ### Changed
+- promote_designated_slave, promote_best_slave:  Added \*\*kwargs to parameter list and pass to convert_to_master function.
+- show_best_slave, show_slave_delays:  Added \*\*kwargs to parameter list.
+- create_instances, convert_to_master:  Receive slv_key argument and call gen_libs.transpose_dict function.
+- main:  Setup slv_key dictionary.
+- convert_to_master, create_instances:  Changed cmds_gen.create_cfg_array to gen_libs.create_cfg_array.
 - Removed unnecessary \*\*kwargs in function argument list.
-- run_program:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
+- run_program:  Replaced cmds_gen.disconnect with mysql_libs.disconnect and add \*\*kwargs to parameter list and pass to create_instances and called function.
 - config/slave.txt.TEMPLATE: Added SSL configuration options.
 - config/mysql.cfg.TEMPLATE:  Point to correct socket file.
+
+### Removed
+- cmds_gen module.
 
 
 ## [2.2.0] - 2020-09-11

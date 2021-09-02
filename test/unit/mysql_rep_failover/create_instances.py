@@ -129,9 +129,10 @@ class UnitTest(unittest.TestCase):
         self.slavearray.append(self.slave3)
         self.args_array = {"-s": "CfgFile", "-d": "CfgDir"}
 
+    @mock.patch("mysql_rep_failover.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_failover.mysql_libs.create_slv_array")
-    @mock.patch("mysql_rep_failover.cmds_gen.create_cfg_array")
-    def test_no_slave(self, mock_cfg, mock_slv):
+    @mock.patch("mysql_rep_failover.gen_libs.create_cfg_array")
+    def test_no_slave(self, mock_cfg, mock_slv, mock_trans):
 
         """Function:  test_no_slave
 
@@ -143,13 +144,15 @@ class UnitTest(unittest.TestCase):
 
         mock_cfg.return_value = []
         mock_slv.return_value = []
+        mock_trans.return_value = []
 
         self.assertEqual(mysql_rep_failover.create_instances(
             self.args_array), [])
 
+    @mock.patch("mysql_rep_failover.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_failover.mysql_libs.create_slv_array")
-    @mock.patch("mysql_rep_failover.cmds_gen.create_cfg_array")
-    def test_default(self, mock_cfg, mock_slv):
+    @mock.patch("mysql_rep_failover.gen_libs.create_cfg_array")
+    def test_default(self, mock_cfg, mock_slv, mock_trans):
 
         """Function:  test_default
 
@@ -161,6 +164,7 @@ class UnitTest(unittest.TestCase):
 
         mock_cfg.return_value = self.slavearray
         mock_slv.return_value = self.slavearray
+        mock_trans.return_value = []
 
         self.assertEqual(mysql_rep_failover.create_instances(
             self.args_array), self.slavearray)

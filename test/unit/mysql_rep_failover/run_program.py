@@ -143,7 +143,7 @@ class UnitTest(unittest.TestCase):
 
     @mock.patch("mysql_rep_failover.gtid_enabled",
                 mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_failover.cmds_gen.disconnect",
+    @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.create_instances")
     def test_function_fails(self, mock_instance):
@@ -202,7 +202,7 @@ class UnitTest(unittest.TestCase):
 
     @mock.patch("mysql_rep_failover.gtid_enabled",
                 mock.Mock(return_value=True))
-    @mock.patch("mysql_rep_failover.cmds_gen.disconnect",
+    @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.create_instances")
     def test_run_program(self, mock_instance):

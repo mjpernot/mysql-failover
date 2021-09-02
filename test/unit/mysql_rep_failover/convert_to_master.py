@@ -183,9 +183,10 @@ class UnitTest(unittest.TestCase):
         self.slv_array = {"name": name, "port": port, "rep_user": rep_user,
                           "rep_japd": rep_japd}
 
+    @mock.patch("mysql_rep_failover.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_failover.mysql_class.MasterRep")
-    @mock.patch("mysql_rep_failover.cmds_gen.create_cfg_array")
-    def test_default(self, mock_array, mock_master):
+    @mock.patch("mysql_rep_failover.gen_libs.create_cfg_array")
+    def test_default(self, mock_array, mock_master, mock_trans):
 
         """Function:  test_promote_best_slave
 
@@ -197,6 +198,7 @@ class UnitTest(unittest.TestCase):
 
         mock_array.return_value = [self.slv_array]
         mock_master.return_value = self.master
+        mock_trans.return_value = [self.slv_array]
 
         master = mysql_rep_failover.convert_to_master(self.slave,
                                                       self.args_array)

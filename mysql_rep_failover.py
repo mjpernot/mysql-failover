@@ -119,7 +119,6 @@ import sys
 import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
-import lib.cmds_gen as cmds_gen
 import mysql_lib.mysql_class as mysql_class
 import mysql_lib.mysql_libs as mysql_libs
 import version
@@ -141,7 +140,7 @@ def help_message():
     print(__doc__)
 
 
-def show_slave_delays(slaves, args_array):
+def show_slave_delays(slaves, args_array, **kwargs):
 
     """Function:  show_slave_delays
 
@@ -151,6 +150,8 @@ def show_slave_delays(slaves, args_array):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
 
@@ -170,7 +171,7 @@ def show_slave_delays(slaves, args_array):
     return err_flag, err_msg
 
 
-def show_best_slave(slaves, args_array):
+def show_best_slave(slaves, args_array, **kwargs):
 
     """Function:  show_best_slave
 
@@ -179,6 +180,8 @@ def show_best_slave(slaves, args_array):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
 
@@ -194,7 +197,7 @@ def show_best_slave(slaves, args_array):
     return err_flag, err_msg
 
 
-def promote_designated_slave(slaves, args_array):
+def promote_designated_slave(slaves, args_array, **kwargs):
 
     """Function:  promote_designated_slave
 
@@ -208,6 +211,8 @@ def promote_designated_slave(slaves, args_array):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
 
@@ -222,7 +227,7 @@ def promote_designated_slave(slaves, args_array):
 
     if new_master:
         slaves.remove(new_master)
-        master = convert_to_master(new_master, args_array)
+        master = convert_to_master(new_master, args_array, **kwargs)
 
         for slv in slaves:
             status_flag = mysql_libs.switch_to_master(master, slv)
@@ -266,7 +271,7 @@ def order_slaves_on_gtid(slaves):
     return slave_list
 
 
-def convert_to_master(slave, args_array):
+def convert_to_master(slave, args_array, **kwargs):
 
     """Function:  convert_to_master
 
@@ -275,12 +280,15 @@ def convert_to_master(slave, args_array):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) master -> MasterRep instance.
 
     """
 
-    slv_array = cmds_gen.create_cfg_array(args_array["-s"],
+    slv_array = gen_libs.create_cfg_array(args_array["-s"],
                                           cfg_path=args_array["-d"])
+    slv_array = gen_libs.transpose_dict(slv_array, kwargs.get("slv_key", {}))
 
     for entry in slv_array:
         if slave.name == entry["name"] and slave.port == int(entry["port"]):
@@ -298,7 +306,7 @@ def convert_to_master(slave, args_array):
     return master
 
 
-def promote_best_slave(slaves, args_array):
+def promote_best_slave(slaves, args_array, **kwargs):
 
     """Function:  promote_best_slave
 
@@ -312,6 +320,8 @@ def promote_best_slave(slaves, args_array):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
 
@@ -327,7 +337,7 @@ def promote_best_slave(slaves, args_array):
     # Best slave (new master) will be at the top.
     _, new_master = slave_list.pop(0)
 
-    master = convert_to_master(new_master, args_array)
+    master = convert_to_master(new_master, args_array, **kwargs)
 
     for _, slv in slave_list:
         status_flag = mysql_libs.switch_to_master(master, slv)
@@ -342,7 +352,7 @@ def promote_best_slave(slaves, args_array):
     return err_flag, err_msg
 
 
-def create_instances(args_array):
+def create_instances(args_array, **kwargs):
 
     """Function:  create_instances
 
@@ -351,6 +361,8 @@ def create_instances(args_array):
 
     Arguments:
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) slaves -> List of slave instances.
 
     """
@@ -359,8 +371,9 @@ def create_instances(args_array):
     slaves = []
 
     # Parse the slave config file.
-    slv_array = cmds_gen.create_cfg_array(args_array["-s"],
+    slv_array = gen_libs.create_cfg_array(args_array["-s"],
                                           cfg_path=args_array["-d"])
+    slv_array = gen_libs.transpose_dict(slv_array, kwargs.get("slv_key", {}))
     slaves = mysql_libs.create_slv_array(slv_array)
 
     return slaves
@@ -388,7 +401,7 @@ def gtid_enabled(slaves):
     return is_enabled
 
 
-def run_program(args_array, func_dict):
+def run_program(args_array, func_dict, **kwargs):
 
     """Function:  run_program
 
@@ -397,18 +410,20 @@ def run_program(args_array, func_dict):
     Arguments:
         (input) args_array -> Array of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
 
     """
 
     args_array = dict(args_array)
     func_dict = dict(func_dict)
-    slaves = create_instances(args_array)
+    slaves = create_instances(args_array, **kwargs)
 
     if slaves and gtid_enabled(slaves):
 
         # Call function(s) - intersection of command line and function dict.
         for item in set(args_array.keys()) & set(func_dict.keys()):
-            err_flag, err_msg = func_dict[item](slaves, args_array)
+            err_flag, err_msg = func_dict[item](slaves, args_array, **kwargs)
 
             if err_flag:
                 print(err_msg)
@@ -447,6 +462,11 @@ def main():
     opt_val_list = ["-d", "-s", "-G", "-y"]
     opt_xor_dict = {"-B": ["-D", "-F", "-G"], "-D": ["-B", "-F", "-G"],
                     "-F": ["-B", "-D", "-G"], "-G": ["-B", "-D", "-F"]}
+    slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
+               "ssl_client_ca": "None", "ssl_ca_path": "None",
+               "ssl_client_key": "None", "ssl_client_cert": "None",
+               "ssl_client_flag": "int", "ssl_disabled": "bool",
+               "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
@@ -459,7 +479,7 @@ def main():
         try:
             prog_lock = gen_class.ProgramLock(cmdline.argv,
                                               args_array.get("-y", ""))
-            run_program(args_array, func_dict)
+            run_program(args_array, func_dict, slv_key=slv_key)
             del prog_lock
 
         except gen_class.SingleInstanceException:
