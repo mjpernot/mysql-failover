@@ -11,6 +11,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to use gen_libs v2.8.4 library.
 
 ### Changed
+- create_instances:  Receive slv_key argument and call gen_libs.transpose_dict function.
 - main:  Setup slv_key dictionary.
 - convert_to_master, create_instances:  Changed cmds_gen.create_cfg_array to gen_libs.create_cfg_array.
 - Removed unnecessary \*\*kwargs in function argument list.
