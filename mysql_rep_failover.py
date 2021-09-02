@@ -227,7 +227,7 @@ def promote_designated_slave(slaves, args_array, **kwargs):
 
     if new_master:
         slaves.remove(new_master)
-        master = convert_to_master(new_master, args_array)
+        master = convert_to_master(new_master, args_array, **kwargs)
 
         for slv in slaves:
             status_flag = mysql_libs.switch_to_master(master, slv)
@@ -303,7 +303,7 @@ def convert_to_master(slave, args_array):
     return master
 
 
-def promote_best_slave(slaves, args_array):
+def promote_best_slave(slaves, args_array, **kwargs):
 
     """Function:  promote_best_slave
 
@@ -319,6 +319,8 @@ def promote_best_slave(slaves, args_array):
         (input) args_array -> Array of command line options and values.
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
 
     """
 
@@ -332,7 +334,7 @@ def promote_best_slave(slaves, args_array):
     # Best slave (new master) will be at the top.
     _, new_master = slave_list.pop(0)
 
-    master = convert_to_master(new_master, args_array)
+    master = convert_to_master(new_master, args_array, **kwargs)
 
     for _, slv in slave_list:
         status_flag = mysql_libs.switch_to_master(master, slv)
