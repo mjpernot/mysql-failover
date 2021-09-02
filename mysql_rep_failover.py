@@ -341,7 +341,7 @@ def promote_best_slave(slaves, args_array):
     return err_flag, err_msg
 
 
-def create_instances(args_array):
+def create_instances(args_array, **kwargs):
 
     """Function:  create_instances
 
@@ -351,6 +351,8 @@ def create_instances(args_array):
     Arguments:
         (input) args_array -> Array of command line options and values.
         (output) slaves -> List of slave instances.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
 
     """
 
@@ -360,6 +362,7 @@ def create_instances(args_array):
     # Parse the slave config file.
     slv_array = gen_libs.create_cfg_array(args_array["-s"],
                                           cfg_path=args_array["-d"])
+    slv_array = gen_libs.transpose_dict(slv_array, kwargs.get("slv_key", {}))
     slaves = mysql_libs.create_slv_array(slv_array)
 
     return slaves
