@@ -169,7 +169,7 @@ def show_slave_delays(slaves, args_array):
     return err_flag, err_msg
 
 
-def show_best_slave(slaves, args_array):
+def show_best_slave(slaves, args_array, **kwargs):
 
     """Function:  show_best_slave
 
@@ -180,6 +180,8 @@ def show_best_slave(slaves, args_array):
         (input) args_array -> Array of command line options and values.
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
 
     """
 
