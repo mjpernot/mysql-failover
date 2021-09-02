@@ -387,7 +387,7 @@ def gtid_enabled(slaves):
     return is_enabled
 
 
-def run_program(args_array, func_dict):
+def run_program(args_array, func_dict, **kwargs):
 
     """Function:  run_program
 
@@ -396,18 +396,20 @@ def run_program(args_array, func_dict):
     Arguments:
         (input) args_array -> Array of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
 
     """
 
     args_array = dict(args_array)
     func_dict = dict(func_dict)
-    slaves = create_instances(args_array)
+    slaves = create_instances(args_array, **kwargs)
 
     if slaves and gtid_enabled(slaves):
 
         # Call function(s) - intersection of command line and function dict.
         for item in set(args_array.keys()) & set(func_dict.keys()):
-            err_flag, err_msg = func_dict[item](slaves, args_array)
+            err_flag, err_msg = func_dict[item](slaves, args_array, **kwargs)
 
             if err_flag:
                 print(err_msg)
