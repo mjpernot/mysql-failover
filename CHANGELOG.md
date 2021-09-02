@@ -11,10 +11,14 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to use gen_libs v2.8.4 library.
 
 ### Changed
+- convert_to_master, create_instances:  Changed cmds_gen.create_cfg_array to gen_libs.create_cfg_array.
 - Removed unnecessary \*\*kwargs in function argument list.
 - run_program:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
 - config/slave.txt.TEMPLATE: Added SSL configuration options.
 - config/mysql.cfg.TEMPLATE:  Point to correct socket file.
+
+### Removed
+- cmds_gen module.
 
 
 ## [2.2.0] - 2020-09-11
