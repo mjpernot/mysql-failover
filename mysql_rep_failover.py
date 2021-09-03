@@ -247,6 +247,8 @@ def promote_designated_slave(slaves, args_array, **kwargs):
                 err_msg = "Slaves: %s that did not change to new master." \
                         % (bad_slv)
 
+            mysql_libs.disconnect(master)
+
     else:
         err_flag = True
         err_msg = "Slave: %s was not found in slave array" % (args_array["-G"])

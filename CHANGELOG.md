@@ -21,6 +21,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - config/slave.txt.TEMPLATE: Added SSL configuration options.
 - config/mysql.cfg.TEMPLATE:  Point to correct socket file.
 
+### Fixed
+- promote_designated_slave:  Add disconnect for master connection.
+
 ### Removed
 - cmds_gen module.
 
