@@ -42,7 +42,7 @@ class ProgramLock(object):
     Description:  Class stub holder for gen_class.ProgramLock class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
