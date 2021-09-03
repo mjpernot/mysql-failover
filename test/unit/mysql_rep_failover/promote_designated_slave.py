@@ -42,7 +42,7 @@ class MasterRep(object):
     Description:  Class stub holder for mysql_class.MasterRep class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -67,8 +67,8 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
-        remove -> Stub holder for mysql_class.SlaveRep.remove method.
+        __init__
+        remove
 
     """
 
@@ -79,9 +79,9 @@ class SlaveRep(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) name -> Name of slave.
-            (input) exe_gtidset -> GTID position.
-            (input) gtid_mode -> True|False - GTID is turned on.
+            (input) name
+            (input) exe_gtidset
+            (input) gtid_mode
 
         """
 
@@ -98,7 +98,7 @@ class SlaveRep(object):
         Description:  Stub holder for mysql_class.SlaveRep.remove method.
 
         Arguments:
-            (input) master -> Master name.
+            (input) master
 
         """
 
@@ -113,7 +113,7 @@ class SlaveRep(object):
         Description:  Stub holder for mysql_class.SlaveRep.append method.
 
         Arguments:
-            (input) slave -> Slave name.
+            (input) slave
 
         """
 
@@ -129,12 +129,13 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_one_failed_switch -> Test switch to new master failed for 1 slave.
-        test_failed_all_switch -> Test switch to new master failed for all.
-        test_slv_not_found -> Test with no master found in slave list.
-        test_one_slave -> Test with only one slave in list.
-        test_default -> Test with default arguments only.
+        setUp
+        test_failed_master
+        test_one_failed_switch
+        test_failed_all_switch
+        test_slv_not_found
+        test_one_slave
+        test_default
 
     """
 
@@ -148,6 +149,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.master = MasterRep()
         self.slave1 = SlaveRep("slave1", "20", True)
         self.slave2 = SlaveRep("slave2", "10", True)
         self.slave3 = SlaveRep("slave3", "15", True)
@@ -172,6 +174,27 @@ class UnitTest(unittest.TestCase):
             "Slaves: ['slave2', 'slave3'] that did not change to new master."
         self.results2 = "Slaves: ['slave2'] that did not change to new master."
         self.results3 = "Slave: slave0 was not found in slave array"
+        self.results4 = "promote_designated_slave: Error on server(%s):  %s " \
+            % ("MySQL_Name", "Error")
+        self.results = self.results4 + "No slaves were changed to new master."
+
+    @mock.patch("mysql_rep_failover.convert_to_master")
+    def test_failed_master(self, mock_master):
+
+        """Function:  test_failed_master
+
+        Description:  Test with failed master connection.
+
+        Arguments:
+
+        """
+
+        self.master.conn_msg = "Error"
+
+        mock_master.return_value = self.master
+
+        self.assertEqual(mysql_rep_failover.promote_designated_slave(
+            self.slavearray, self.args_array), (True, self.results4))
 
     @mock.patch("mysql_rep_failover.convert_to_master",
                 mock.Mock(return_value=MasterRep()))
