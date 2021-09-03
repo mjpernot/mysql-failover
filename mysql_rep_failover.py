@@ -343,18 +343,24 @@ def promote_best_slave(slaves, args_array, **kwargs):
 
     # Best slave (new master) will be at the top.
     _, new_master = slave_list.pop(0)
-
     master = convert_to_master(new_master, args_array, **kwargs)
 
-    for _, slv in slave_list:
-        status_flag = mysql_libs.switch_to_master(master, slv)
+    if master.conn_msg:
+        err_flag = True
+        err_msg = "promote_best_slave: Error on server(%s):  %s " % \
+            (master.name, master.conn_msg)
+        err_msg = err_msg + "No slaves were changed to new master."
 
-        if status_flag == -1:
-            err_flag = True
-            bad_slv.append(slv.name)
+    else:
+        for _, slv in slave_list:
+            status_flag = mysql_libs.switch_to_master(master, slv)
 
-    if err_flag:
-        err_msg = "Slaves: %s that did not change to new master." % (bad_slv)
+            if status_flag == -1:
+                err_flag = True
+                bad_slv.append(slv.name)
+
+        if err_flag:
+            err_msg = "Slaves: %s that did not change to new master." % (bad_slv)
 
     return err_flag, err_msg
 
