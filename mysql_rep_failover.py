@@ -362,7 +362,10 @@ def promote_best_slave(slaves, args_array, **kwargs):
                 bad_slv.append(slv.name)
 
         if err_flag:
-            err_msg = "Slaves: %s that did not change to new master." % (bad_slv)
+            err_msg = "Slaves: %s that did not change to new master." % \
+                      (bad_slv)
+
+        mysql_libs.disconnect(master)
 
     return err_flag, err_msg
 
