@@ -42,7 +42,7 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -71,9 +71,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_one_slave -> Test with only one slave in list.
-        test_default -> Test with default arguments only.
+        setUp
+        test_one_slave
+        test_default
 
     """
 
