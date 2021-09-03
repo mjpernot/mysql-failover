@@ -176,7 +176,7 @@ class UnitTest(unittest.TestCase):
         self.results3 = "Slave: slave0 was not found in slave array"
         self.results4 = "promote_designated_slave: Error on server(%s):  %s " \
             % ("MySQL_Name", "Error")
-        self.results = self.results4 + "No slaves were changed to new master."
+        self.results4 = self.results4 + "No slaves were changed to new master."
 
     @mock.patch("mysql_rep_failover.convert_to_master")
     def test_failed_master(self, mock_master):
