@@ -196,6 +196,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_designated_slave(
             self.slavearray, self.args_array), (True, self.results4))
 
+    @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.convert_to_master",
                 mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
@@ -214,6 +216,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_designated_slave(
             self.slavearray, self.args_array), (True, self.results2))
 
+    @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.convert_to_master",
                 mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
@@ -232,6 +236,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_designated_slave(
             self.slavearray, self.args_array), (True, self.results))
 
+    @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
     def test_slv_not_found(self, mock_switch):
 
@@ -248,6 +254,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_designated_slave(
             self.slavearray, self.args_array2), (True, self.results3))
 
+    @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.convert_to_master",
                 mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
@@ -266,6 +274,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_designated_slave(
             self.slavearray2, self.args_array), (False, None))
 
+    @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.convert_to_master",
                 mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
