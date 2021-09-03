@@ -57,6 +57,7 @@ class MasterRep(object):
         """
 
         self.name = "MySQL_Name"
+        self.conn_msg = None
 
 
 class SlaveRep(object):
@@ -78,9 +79,9 @@ class SlaveRep(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) name
-            (input) exe_gtidset
-            (input) gtid_mode
+            (input) name -> Name of instance.
+            (input) exe_gtidset -> GTID position.
+            (input) gtid_mode -> True|False - GTID is turned on.
 
         """
 
@@ -129,6 +130,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_failed_master
         test_one_failed_switch
         test_failed_all_switch
         test_one_slave
@@ -146,6 +148,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.master = MasterRep()
         self.slave1 = SlaveRep("slave1", "20", True)
         self.slave2 = SlaveRep("slave2", "10", True)
         self.slave3 = SlaveRep("slave3", "15", True)
@@ -160,7 +163,30 @@ class UnitTest(unittest.TestCase):
         self.results = \
             "Slaves: ['slave3', 'slave1'] that did not change to new master."
         self.results2 = "Slaves: ['slave3'] that did not change to new master."
+        self.results4 = "promote_best_slave: Error on server(%s):  %s " \
+            % ("MySQL_Name", "Error")
+        self.results4 = self.results4 + "No slaves were changed to new master."
 
+    @mock.patch("mysql_rep_failover.convert_to_master")
+    def test_failed_master(self, mock_master):
+
+        """Function:  test_failed_master
+
+        Description:  Test with switch to new master failed for one slave.
+
+        Arguments:
+
+        """
+
+        self.master.conn_msg = "Error"
+
+        mock_master.return_value = self.master
+
+        self.assertEqual(mysql_rep_failover.promote_best_slave(
+            self.slavearray, self.args_array), (True, self.results4))
+
+    @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.convert_to_master",
                 mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
@@ -179,6 +205,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_best_slave(
             self.slavearray, self.args_array), (True, self.results2))
 
+    @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.convert_to_master",
                 mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
@@ -197,6 +225,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_best_slave(
             self.slavearray, self.args_array), (True, self.results))
 
+    @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.convert_to_master",
                 mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
@@ -215,6 +245,8 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(mysql_rep_failover.promote_best_slave(
             self.slavearray2, self.args_array), (False, None))
 
+    @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_rep_failover.convert_to_master",
                 mock.Mock(return_value=MasterRep()))
     @mock.patch("mysql_rep_failover.mysql_libs.switch_to_master")
