@@ -41,8 +41,8 @@ class MasterRep(object):
     Description:  Class stub holder for mysql_class.MasterRep class.
 
     Methods:
-        __init__ -> Class initialization.
-        connect -> Stub holder for mysql_class.MasterRep.connect method.
+        __init__
+        connect
 
     """
 
@@ -53,18 +53,18 @@ class MasterRep(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) name -> Name of instance.
-            (input) server_id -> Server ID.
-            (input) sql_user -> Sql user name.
-            (input) sql_pass -> SQL user pswd.
-            (input) machine -> Machine instance.
+            (input) name
+            (input) server_id
+            (input) sql_user
+            (input) sql_pass
+            (input) machine
             (input) kwargs:
-                host -> Host name.
-                port -> SQL port.
-                defaults_file -> Defaults file name.
-                extra_def_file -> Extra defaults file name.
-                rep_user -> Replication user name.
-                rep_japd -> Replication user pswd.
+                host
+                port
+                defaults_file
+                extra_def_file
+                rep_user
+                rep_japd
 
         """
 
@@ -100,7 +100,7 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -111,16 +111,16 @@ class SlaveRep(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) name -> Name of instance.
-            (input) server_id -> Server ID.
-            (input) sql_user -> Sql user name.
-            (input) sql_pass -> SQL user pswd.
-            (input) machine -> Machine instance.
+            (input) name
+            (input) server_id
+            (input) sql_user
+            (input) sql_pass
+            (input) machine
             (input) kwargs:
-                host -> Host name.
-                port -> SQL port.
-                defaults_file -> Defaults file name.
-                extra_def_file -> Extra defaults file name.
+                host
+                port
+                defaults_file
+                extra_def_file
 
         """
 
@@ -142,8 +142,8 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_default -> Test with default arguments only.
+        setUp
+        test_default
 
     """
 
@@ -183,9 +183,10 @@ class UnitTest(unittest.TestCase):
         self.slv_array = {"name": name, "port": port, "rep_user": rep_user,
                           "rep_japd": rep_japd}
 
+    @mock.patch("mysql_rep_failover.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_failover.mysql_class.MasterRep")
-    @mock.patch("mysql_rep_failover.cmds_gen.create_cfg_array")
-    def test_default(self, mock_array, mock_master):
+    @mock.patch("mysql_rep_failover.gen_libs.create_cfg_array")
+    def test_default(self, mock_array, mock_master, mock_trans):
 
         """Function:  test_promote_best_slave
 
@@ -197,6 +198,7 @@ class UnitTest(unittest.TestCase):
 
         mock_array.return_value = [self.slv_array]
         mock_master.return_value = self.master
+        mock_trans.return_value = [self.slv_array]
 
         master = mysql_rep_failover.convert_to_master(self.slave,
                                                       self.args_array)

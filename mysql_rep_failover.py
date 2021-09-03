@@ -66,27 +66,44 @@
             cfg_file = None
             port = 3306
             serv_os = Linux
-            extra_def_file = DIRECTORY_PATH/mysql.cfg
+            extra_def_file = PYTHON_PROJECT/mysql.cfg
+
+            # If SSL connections are being used, configure one or more of these
+                entries:
+            ssl_client_ca = None
+            ssl_client_key = None
+            ssl_client_cert = None
+
+            # Only changes these if necessary and have knowledge in MySQL
+                SSL configuration setup:
+            ssl_client_flag = None
+            ssl_disabled = False
+            ssl_verify_id = False
+            ssl_verify_cert = False
 
         NOTE 1:  Include the cfg_file even if running remotely as the file will
             be used in future releases.
-
         NOTE 2:  In MySQL 5.6 - it now gives warning if password is passed on
             the command line.  To suppress this warning, will require the use
             of the --defaults-extra-file option (i.e. extra_def_file) in the
             database configuration file.  See below for the defaults-extra-file
             format.
-
         NOTE 3:  The rep_user entry is the name of the Replication user that is
             used across the replication domain.
 
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
             password="PASSWORD"
-            socket="MYSQL_DIRECTORY/mysql.sock"
+            socket="DIRECTORY_PATH/mysqld.sock"
 
-        NOTE:  The socket information can be obtained from the my.cnf
+        NOTE 1:  The socket information can be obtained from the my.cnf
             file under ~/mysql directory.
+        NOTE 2:  The --defaults-extra-file option will be overridden if there
+            is a ~/.my.cnf or ~/.mylogin.cnf file located in the home directory
+            of the user running this program.  The extras file will in effect
+            be ignored.
+        NOTE 3:  Socket use is only required to be set in certain conditions
+            when connecting using localhost.
 
     Example:
         mysql_rep_failover.py -s slaves.txt -d config -F
@@ -102,7 +119,6 @@ import sys
 import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
-import lib.cmds_gen as cmds_gen
 import mysql_lib.mysql_class as mysql_class
 import mysql_lib.mysql_libs as mysql_libs
 import version
@@ -134,6 +150,8 @@ def show_slave_delays(slaves, args_array, **kwargs):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
 
@@ -162,6 +180,8 @@ def show_best_slave(slaves, args_array, **kwargs):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
 
@@ -191,6 +211,8 @@ def promote_designated_slave(slaves, args_array, **kwargs):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
 
@@ -205,18 +227,27 @@ def promote_designated_slave(slaves, args_array, **kwargs):
 
     if new_master:
         slaves.remove(new_master)
-        master = convert_to_master(new_master, args_array)
+        master = convert_to_master(new_master, args_array, **kwargs)
 
-        for slv in slaves:
-            status_flag = mysql_libs.switch_to_master(master, slv)
+        if master.conn_msg:
+            err_flag = True
+            err_msg = "promote_designated_slave: Error on server(%s):  %s " % \
+                (master.name, master.conn_msg)
+            err_msg = err_msg + "No slaves were changed to new master."
 
-            if status_flag == -1:
-                err_flag = True
-                bad_slv.append(slv.name)
+        else:
+            for slv in slaves:
+                status_flag = mysql_libs.switch_to_master(master, slv)
 
-        if err_flag:
-            err_msg = "Slaves: %s that did not change to new master." \
-                      % (bad_slv)
+                if status_flag == -1:
+                    err_flag = True
+                    bad_slv.append(slv.name)
+
+            if err_flag:
+                err_msg = "Slaves: %s that did not change to new master." \
+                        % (bad_slv)
+
+            mysql_libs.disconnect(master)
 
     else:
         err_flag = True
@@ -225,7 +256,7 @@ def promote_designated_slave(slaves, args_array, **kwargs):
     return err_flag, err_msg
 
 
-def order_slaves_on_gtid(slaves, **kwargs):
+def order_slaves_on_gtid(slaves):
 
     """Function:  order_slaves_on_gtid
 
@@ -258,12 +289,15 @@ def convert_to_master(slave, args_array, **kwargs):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) master -> MasterRep instance.
 
     """
 
-    slv_array = cmds_gen.create_cfg_array(args_array["-s"],
+    slv_array = gen_libs.create_cfg_array(args_array["-s"],
                                           cfg_path=args_array["-d"])
+    slv_array = gen_libs.transpose_dict(slv_array, kwargs.get("slv_key", {}))
 
     for entry in slv_array:
         if slave.name == entry["name"] and slave.port == int(entry["port"]):
@@ -295,6 +329,8 @@ def promote_best_slave(slaves, args_array, **kwargs):
     Arguments:
         (input) slaves -> Slave instance array.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) err_flag -> True|False - if an error has occurred.
         (output) err_msg -> Error message.
 
@@ -309,18 +345,27 @@ def promote_best_slave(slaves, args_array, **kwargs):
 
     # Best slave (new master) will be at the top.
     _, new_master = slave_list.pop(0)
+    master = convert_to_master(new_master, args_array, **kwargs)
 
-    master = convert_to_master(new_master, args_array)
+    if master.conn_msg:
+        err_flag = True
+        err_msg = "promote_best_slave: Error on server(%s):  %s " % \
+            (master.name, master.conn_msg)
+        err_msg = err_msg + "No slaves were changed to new master."
 
-    for _, slv in slave_list:
-        status_flag = mysql_libs.switch_to_master(master, slv)
+    else:
+        for _, slv in slave_list:
+            status_flag = mysql_libs.switch_to_master(master, slv)
 
-        if status_flag == -1:
-            err_flag = True
-            bad_slv.append(slv.name)
+            if status_flag == -1:
+                err_flag = True
+                bad_slv.append(slv.name)
 
-    if err_flag:
-        err_msg = "Slaves: %s that did not change to new master." % (bad_slv)
+        if err_flag:
+            err_msg = "Slaves: %s that did not change to new master." % \
+                      (bad_slv)
+
+        mysql_libs.disconnect(master)
 
     return err_flag, err_msg
 
@@ -334,6 +379,8 @@ def create_instances(args_array, **kwargs):
 
     Arguments:
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
         (output) slaves -> List of slave instances.
 
     """
@@ -342,14 +389,15 @@ def create_instances(args_array, **kwargs):
     slaves = []
 
     # Parse the slave config file.
-    slv_array = cmds_gen.create_cfg_array(args_array["-s"],
+    slv_array = gen_libs.create_cfg_array(args_array["-s"],
                                           cfg_path=args_array["-d"])
+    slv_array = gen_libs.transpose_dict(slv_array, kwargs.get("slv_key", {}))
     slaves = mysql_libs.create_slv_array(slv_array)
 
     return slaves
 
 
-def gtid_enabled(slaves, **kwargs):
+def gtid_enabled(slaves):
 
     """Function:  gtid_enabled
 
@@ -380,24 +428,26 @@ def run_program(args_array, func_dict, **kwargs):
     Arguments:
         (input) args_array -> Array of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
+        (input) kwargs:
+            slv_key -> Dictionary of keys and data types.
 
     """
 
     args_array = dict(args_array)
     func_dict = dict(func_dict)
-    slaves = create_instances(args_array)
+    slaves = create_instances(args_array, **kwargs)
 
     if slaves and gtid_enabled(slaves):
 
         # Call function(s) - intersection of command line and function dict.
         for item in set(args_array.keys()) & set(func_dict.keys()):
-            err_flag, err_msg = func_dict[item](slaves, args_array)
+            err_flag, err_msg = func_dict[item](slaves, args_array, **kwargs)
 
             if err_flag:
                 print(err_msg)
                 break
 
-        cmds_gen.disconnect(slaves)
+        mysql_libs.disconnect(slaves)
 
     else:
         print("Error:  Empty Slave array or Slave(s) not GTID enabled.")
@@ -416,6 +466,7 @@ def main():
         opt_req_list -> contains the options that are required for the program.
         opt_val_list -> contains options which require values.
         opt_xor_dict -> contains dict with key that is xor with it's values.
+        slv_key -> contains dict with keys to be converted to data types.
 
     Arguments:
         (input) argv -> Arguments from the command line.
@@ -430,6 +481,11 @@ def main():
     opt_val_list = ["-d", "-s", "-G", "-y"]
     opt_xor_dict = {"-B": ["-D", "-F", "-G"], "-D": ["-B", "-F", "-G"],
                     "-F": ["-B", "-D", "-G"], "-G": ["-B", "-D", "-F"]}
+    slv_key = {"sid": "int", "port": "int", "cfg_file": "None",
+               "ssl_client_ca": "None", "ssl_ca_path": "None",
+               "ssl_client_key": "None", "ssl_client_cert": "None",
+               "ssl_client_flag": "int", "ssl_disabled": "bool",
+               "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
@@ -442,7 +498,7 @@ def main():
         try:
             prog_lock = gen_class.ProgramLock(cmdline.argv,
                                               args_array.get("-y", ""))
-            run_program(args_array, func_dict)
+            run_program(args_array, func_dict, slv_key=slv_key)
             del prog_lock
 
         except gen_class.SingleInstanceException:

@@ -42,8 +42,8 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
-        remove -> Stub holder for mysql_class.SlaveRep.remove method.
+        __init__
+        remove
 
     """
 
@@ -54,9 +54,9 @@ class SlaveRep(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) name -> Name of slave.
-            (input) exe_gtidset -> GTID position.
-            (input) gtid_mode -> True|False - GTID is turned on.
+            (input) name
+            (input) exe_gtidset
+            (input) gtid_mode
 
         """
 
@@ -73,7 +73,7 @@ class SlaveRep(object):
         Description:  Stub holder for mysql_class.SlaveRep.remove method.
 
         Arguments:
-            (input) master -> Master name.
+            (input) master
 
         """
 
@@ -88,7 +88,7 @@ class SlaveRep(object):
         Description:  Stub holder for mysql_class.SlaveRep.append method.
 
         Arguments:
-            (input) slave -> Slave name.
+            (input) slave
 
         """
 
@@ -104,9 +104,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_no_slave -> Test with no slaves in list.
-        test_default -> Test with default arguments only.
+        setUp
+        test_no_slave
+        test_default
 
     """
 
@@ -129,9 +129,10 @@ class UnitTest(unittest.TestCase):
         self.slavearray.append(self.slave3)
         self.args_array = {"-s": "CfgFile", "-d": "CfgDir"}
 
+    @mock.patch("mysql_rep_failover.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_failover.mysql_libs.create_slv_array")
-    @mock.patch("mysql_rep_failover.cmds_gen.create_cfg_array")
-    def test_no_slave(self, mock_cfg, mock_slv):
+    @mock.patch("mysql_rep_failover.gen_libs.create_cfg_array")
+    def test_no_slave(self, mock_cfg, mock_slv, mock_trans):
 
         """Function:  test_no_slave
 
@@ -143,13 +144,15 @@ class UnitTest(unittest.TestCase):
 
         mock_cfg.return_value = []
         mock_slv.return_value = []
+        mock_trans.return_value = []
 
         self.assertEqual(mysql_rep_failover.create_instances(
             self.args_array), [])
 
+    @mock.patch("mysql_rep_failover.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_failover.mysql_libs.create_slv_array")
-    @mock.patch("mysql_rep_failover.cmds_gen.create_cfg_array")
-    def test_default(self, mock_cfg, mock_slv):
+    @mock.patch("mysql_rep_failover.gen_libs.create_cfg_array")
+    def test_default(self, mock_cfg, mock_slv, mock_trans):
 
         """Function:  test_default
 
@@ -161,6 +164,7 @@ class UnitTest(unittest.TestCase):
 
         mock_cfg.return_value = self.slavearray
         mock_slv.return_value = self.slavearray
+        mock_trans.return_value = []
 
         self.assertEqual(mysql_rep_failover.create_instances(
             self.args_array), self.slavearray)
