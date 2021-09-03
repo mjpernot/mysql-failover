@@ -69,19 +69,19 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_programlock_id -> Test with ProgramLock with flavor id.
-        test_programlock_false -> Test with ProgramLock returns False.
-        test_programlock_true -> Test with ProgramLock returns True.
-        test_run_program -> Test with run_program.
-        test_arg_dir_chk_crt_false -> Test arg_dir_chk_crt if returns false.
-        test_arg_dir_chk_crt_true -> Test arg_dir_chk_crt if returns true.
-        test_arg_xor_dict_true -> Test arg_xor_dict if returns true.
-        test_arg_xor_dict_false -> Test arg_xor_dict if returns false.
-        test_arg_require_false -> Test arg_require if returns false.
-        test_arg_require_true -> Test arg_require if returns true.
-        test_help_false -> Test help if returns false.
-        test_help_true -> Test help if returns true.
+        setUp
+        test_programlock_id
+        test_programlock_false
+        test_programlock_true
+        test_run_program
+        test_arg_dir_chk_crt_false
+        test_arg_dir_chk_crt_true
+        test_arg_xor_dict_true
+        test_arg_xor_dict_false
+        test_arg_require_false
+        test_arg_require_true
+        test_help_false
+        test_help_true
 
     """
 
