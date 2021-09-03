@@ -232,7 +232,7 @@ def promote_designated_slave(slaves, args_array, **kwargs):
         if master.conn_msg:
             err_flag = True
             err_msg = "promote_designated_slave: Error on server(%s):  %s " % \
-                (server.name, server.conn_msg)
+                (master.name, master.conn_msg)
             err_msg = err_msg + "No slaves were changed to new master."
 
         else:
