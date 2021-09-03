@@ -229,16 +229,23 @@ def promote_designated_slave(slaves, args_array, **kwargs):
         slaves.remove(new_master)
         master = convert_to_master(new_master, args_array, **kwargs)
 
-        for slv in slaves:
-            status_flag = mysql_libs.switch_to_master(master, slv)
+        if master.conn_msg:
+            err_flag = True
+            err_msg = "promote_designated_slave:  Error on server(%s):  %s " %
+                (server.name, server.conn_msg)
+            err_msg = err_msg + "No slaves were changed to new master."
 
-            if status_flag == -1:
-                err_flag = True
-                bad_slv.append(slv.name)
+        else:
+            for slv in slaves:
+                status_flag = mysql_libs.switch_to_master(master, slv)
 
-        if err_flag:
-            err_msg = "Slaves: %s that did not change to new master." \
-                      % (bad_slv)
+                if status_flag == -1:
+                    err_flag = True
+                    bad_slv.append(slv.name)
+
+            if err_flag:
+                err_msg = "Slaves: %s that did not change to new master." \
+                        % (bad_slv)
 
     else:
         err_flag = True
