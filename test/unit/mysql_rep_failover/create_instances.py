@@ -104,9 +104,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_no_slave -> Test with no slaves in list.
-        test_default -> Test with default arguments only.
+        setUp
+        test_no_slave
+        test_default
 
     """
 
