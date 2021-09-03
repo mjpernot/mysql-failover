@@ -42,8 +42,8 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
-        remove -> Stub holder for mysql_class.SlaveRep.remove method.
+        __init__
+        remove
 
     """
 
