@@ -461,6 +461,7 @@ def main():
         opt_req_list -> contains the options that are required for the program.
         opt_val_list -> contains options which require values.
         opt_xor_dict -> contains dict with key that is xor with it's values.
+        slv_key -> contains dict with keys to be converted to data types.
 
     Arguments:
         (input) argv -> Arguments from the command line.
