@@ -11,7 +11,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to use gen_libs v2.8.4 library.
 
 ### Changed
-- promote_designated_slave, promote_best_slave:  Added \*\*kwargs to parameter list and pass to convert_to_master function.
+- promote_designated_slave, promote_best_slave:  Added \*\*kwargs to parameter list and pass to convert_to_master function and add check on master connection status.
 - show_best_slave, show_slave_delays:  Added \*\*kwargs to parameter list.
 - create_instances, convert_to_master:  Receive slv_key argument and call gen_libs.transpose_dict function.
 - main:  Setup slv_key dictionary.
@@ -20,6 +20,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - run_program:  Replaced cmds_gen.disconnect with mysql_libs.disconnect and add \*\*kwargs to parameter list and pass to create_instances and called function.
 - config/slave.txt.TEMPLATE: Added SSL configuration options.
 - config/mysql.cfg.TEMPLATE:  Point to correct socket file.
+
+### Fixed
+- promote_designated_slave, promote_best_slave:  Add disconnect for master connection.
 
 ### Removed
 - cmds_gen module.
