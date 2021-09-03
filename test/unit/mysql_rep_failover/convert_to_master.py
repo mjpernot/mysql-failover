@@ -41,8 +41,8 @@ class MasterRep(object):
     Description:  Class stub holder for mysql_class.MasterRep class.
 
     Methods:
-        __init__ -> Class initialization.
-        connect -> Stub holder for mysql_class.MasterRep.connect method.
+        __init__
+        connect
 
     """
 
@@ -100,7 +100,7 @@ class SlaveRep(object):
     Description:  Class stub holder for mysql_class.SlaveRep class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
