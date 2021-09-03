@@ -57,6 +57,7 @@ class MasterRep(object):
         """
 
         self.name = "MySQL_Name"
+        self.conn_msg = None
 
 
 class SlaveRep(object):
