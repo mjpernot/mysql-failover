@@ -79,9 +79,9 @@ class SlaveRep(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) name
-            (input) exe_gtidset
-            (input) gtid_mode
+            (input) name -> Name of instance.
+            (input) exe_gtidset -> GTID position.
+            (input) gtid_mode -> True|False - GTID is turned on.
 
         """
 
@@ -98,7 +98,7 @@ class SlaveRep(object):
         Description:  Stub holder for mysql_class.SlaveRep.remove method.
 
         Arguments:
-            (input) master
+            (input) master -> Master name.
 
         """
 
@@ -113,7 +113,7 @@ class SlaveRep(object):
         Description:  Stub holder for mysql_class.SlaveRep.append method.
 
         Arguments:
-            (input) slave
+            (input) slave -> Slave name.
 
         """
 
