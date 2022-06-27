@@ -19,8 +19,11 @@
         done outside the scope of this program.
 
     Usage:
-        mysql_rep_failover.py -s [path/]file -d path
-            {-F | -G name | -B | -D}
+        mysql_rep_failover.py -s [path]file -d path
+            {-F |
+             -G name |
+             -B |
+             -D}
             [-y flavor_id] [-v | -h]
 
     Arguments:
@@ -81,6 +84,9 @@
             ssl_verify_id = False
             ssl_verify_cert = False
 
+            # Set what TLS versions are allowed in the connection set up:
+            tls_versions = []
+
         NOTE 1:  Include the cfg_file even if running remotely as the file will
             be used in future releases.
         NOTE 2:  In MySQL 5.6 - it now gives warning if password is passed on
@@ -93,7 +99,7 @@
 
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
-            password="PASSWORD"
+            password="PSWORD"
             socket="DIRECTORY_PATH/mysqld.sock"
 
         NOTE 1:  The socket information can be obtained from the my.cnf
