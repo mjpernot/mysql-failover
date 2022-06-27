@@ -10,7 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Added TLS capability
 
 ### Changed
-- config/mysql_cfg.py.TEMPLATE: Added TLS entry.
+- config/slave.txt.TEMPLATE: Added TLS entry.
 - Documentation updates.
 
 
