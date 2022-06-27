@@ -5,6 +5,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.3.1] - 2022-06-27
+- Upgraded python-lib to v2.9.2
+- Upgraded mysql-lib to v5.3.1
 
 
 ## [2.3.0] - 2021-08-20
