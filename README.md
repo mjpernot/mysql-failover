@@ -91,6 +91,9 @@ Create a MySQL slave configuration file.  Make the appropriate change to the env
     - ssl_verify_id = False
     - ssl_verify_cert = False
 
+  * TLS version: Set what TLS versions are allowed in the connection set up.
+    - tls_versions = []
+
   * Create a new set of entries for each slave in the MySQL replica set.
 
 ```
@@ -102,7 +105,7 @@ chmod 600 slave.txt
 Create MySQL definition file.  Make the appropriate change to the MySQL definition setup.
   * Change these entries in the MySQL configuration file:
   * Note:  socket use is only required to be set in certain conditions when connecting using localhost.
-    - password="PASSWORD"
+    - password="PSWORD"
     - socket=DIRECTORY_PATH/mysqld.sock
 
 ```
