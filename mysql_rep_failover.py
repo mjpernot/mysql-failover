@@ -260,7 +260,7 @@ def promote_designated_slave(slaves, args_array, **kwargs):
 
             if err_flag:
                 err_msg = "Slaves: %s that did not change to new master." \
-                        % (bad_slv)
+                    % (bad_slv)
 
             mysql_libs.disconnect(master)
 

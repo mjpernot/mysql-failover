@@ -10,7 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Upgraded mysql-lib to v5.3.2
 
 ### Changed
-- Converted imports to Python 2.7 or Python 3.
+- Converted imports to use Python 2.7 or Python 3.
 
 
 ## [2.3.1] - 2022-06-27
