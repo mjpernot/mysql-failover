@@ -19,8 +19,6 @@ import sys
 import os
 import unittest
 
-# Third-party
-
 # Local
 sys.path.append(os.getcwd())
 import mysql_rep_failover
