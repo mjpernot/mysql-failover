@@ -7,7 +7,6 @@
 
 ###  This README file is broken down into the following sections:
   * Features
-  * Prerequisites
   * Installation
   * Configuration
   * Program Help Function
@@ -20,16 +19,6 @@
   * Selecting a specific slave to become the new master.
   * Displaying the best slave in the replica set.
   * Show all the slaves in the replica set from best to worst.
-
-# Prerequisites:
-
-  * List of Linux packages that need to be installed on the server.
-    - git
-    - python-pip
-
-  * Local class/library dependencies within the program structure.
-    - python-lib
-    - mysql-lib
 
 
 # Installation:
