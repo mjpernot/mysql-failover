@@ -5,6 +5,10 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.4.0] - 2023-08-17
+- Upgraded python-lib to v2.10.1
+
+### Changed
+- main: Removed gen_libs.get_inst call.
 
 
 ## [2.3.2] - 2022-11-07

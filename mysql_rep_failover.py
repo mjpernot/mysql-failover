@@ -490,7 +490,6 @@ def main():
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
     dir_chk_list = ["-d"]
     func_dict = {"-B": show_best_slave, "-D": show_slave_delays,
                  "-F": promote_best_slave, "-G": promote_designated_slave}
@@ -505,7 +504,7 @@ def main():
                "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
+    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and not arg_parser.arg_require(args_array, opt_req_list) \
@@ -513,8 +512,8 @@ def main():
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
 
         try:
-            prog_lock = gen_class.ProgramLock(cmdline.argv,
-                                              args_array.get("-y", ""))
+            prog_lock = gen_class.ProgramLock(
+                sys.argv, args_array.get("-y", ""))
             run_program(args_array, func_dict, slv_key=slv_key)
             del prog_lock
 
