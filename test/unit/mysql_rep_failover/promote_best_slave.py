@@ -28,6 +28,31 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+
 class MasterRep(object):
 
     """Class:  MasterRep
@@ -141,6 +166,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args = ArgParser()
+        self.args2 = ArgParser()
+        self.args.args_array = {"-G": "slave1"}
+        self.args2.args_array = {"-G": "slave0"}
         self.master = MasterRep()
         self.slave1 = SlaveRep("slave1", "20", True)
         self.slave2 = SlaveRep("slave2", "10", True)
@@ -151,8 +180,6 @@ class UnitTest(unittest.TestCase):
         self.slavearray.append(self.slave2)
         self.slavearray.append(self.slave3)
         self.slavearray2.append(self.slave1)
-        self.args_array = {"-G": "slave1"}
-        self.args_array2 = {"-G": "slave0"}
         self.results = \
             "Slaves: ['slave3', 'slave1'] that did not change to new master."
         self.results2 = "Slaves: ['slave3'] that did not change to new master."
@@ -175,8 +202,9 @@ class UnitTest(unittest.TestCase):
 
         mock_master.return_value = self.master
 
-        self.assertEqual(mysql_rep_failover.promote_best_slave(
-            self.slavearray, self.args_array), (True, self.results4))
+        self.assertEqual(
+            mysql_rep_failover.promote_best_slave(
+                self.slavearray, self.args), (True, self.results4))
 
     @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -195,8 +223,9 @@ class UnitTest(unittest.TestCase):
 
         mock_switch.side_effect = [-1, 0]
 
-        self.assertEqual(mysql_rep_failover.promote_best_slave(
-            self.slavearray, self.args_array), (True, self.results2))
+        self.assertEqual(
+            mysql_rep_failover.promote_best_slave(
+                self.slavearray, self.args), (True, self.results2))
 
     @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -215,8 +244,9 @@ class UnitTest(unittest.TestCase):
 
         mock_switch.return_value = -1
 
-        self.assertEqual(mysql_rep_failover.promote_best_slave(
-            self.slavearray, self.args_array), (True, self.results))
+        self.assertEqual(
+            mysql_rep_failover.promote_best_slave(
+                self.slavearray, self.args), (True, self.results))
 
     @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -235,8 +265,9 @@ class UnitTest(unittest.TestCase):
 
         mock_switch.return_value = 0
 
-        self.assertEqual(mysql_rep_failover.promote_best_slave(
-            self.slavearray2, self.args_array), (False, None))
+        self.assertEqual(
+            mysql_rep_failover.promote_best_slave(
+                self.slavearray2, self.args), (False, None))
 
     @mock.patch("mysql_rep_failover.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -255,8 +286,9 @@ class UnitTest(unittest.TestCase):
 
         mock_switch.return_value = 0
 
-        self.assertEqual(mysql_rep_failover.promote_best_slave(
-            self.slavearray, self.args_array), (False, None))
+        self.assertEqual(
+            mysql_rep_failover.promote_best_slave(
+                self.slavearray, self.args), (False, None))
 
 
 if __name__ == "__main__":

@@ -27,6 +27,44 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
 class MasterRep(object):
 
     """Class:  MasterRep
@@ -150,6 +188,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args = ArgParser()
+        self.args.args_array = {"-s": "slavefile", "-d": "configdir"}
         name = "MySQLName"
         server_id = 10
         sql_user = "sqluser"
@@ -172,7 +212,6 @@ class UnitTest(unittest.TestCase):
             port=self.slave.port, defaults_file=self.slave.defaults_file,
             extra_def_file=self.slave.extra_def_file, rep_user=rep_user,
             rep_japd=rep_japd)
-        self.args_array = {"-s": "slavefile", "-d": "configdir"}
         self.slv_array = {"name": name, "port": port, "rep_user": rep_user,
                           "rep_japd": rep_japd}
 
@@ -193,8 +232,7 @@ class UnitTest(unittest.TestCase):
         mock_master.return_value = self.master
         mock_trans.return_value = [self.slv_array]
 
-        master = mysql_rep_failover.convert_to_master(self.slave,
-                                                      self.args_array)
+        master = mysql_rep_failover.convert_to_master(self.slave, self.args)
 
         self.assertTrue(isinstance(master, MasterRep))
 
