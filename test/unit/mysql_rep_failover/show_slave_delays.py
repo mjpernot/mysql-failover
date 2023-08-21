@@ -28,6 +28,31 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+
 class SlaveRep(object):
 
     """Class:  SlaveRep
@@ -80,6 +105,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args = ArgParser()
         self.slave1 = SlaveRep("slave1", "20", True)
         self.slave2 = SlaveRep("slave2", "10", True)
         self.slave3 = SlaveRep("slave3", "15", True)
@@ -98,7 +124,6 @@ class UnitTest(unittest.TestCase):
         self.slaveorder.append((slv2.exe_gtidset, slv2))
         self.slaveorder.append((slv0.exe_gtidset, slv0))
         self.slaveorder2.append((slv1.exe_gtidset, slv1))
-        self.args_array = {}
 
     @mock.patch("mysql_rep_failover.order_slaves_on_gtid")
     def test_one_slave(self, mock_order):
@@ -114,8 +139,9 @@ class UnitTest(unittest.TestCase):
         mock_order.return_value = self.slaveorder2
 
         with gen_libs.no_std_out():
-            self.assertEqual(mysql_rep_failover.show_slave_delays(
-                self.slavearray2, self.args_array), (False, None))
+            self.assertEqual(
+                mysql_rep_failover.show_slave_delays(
+                    self.slavearray2, self.args), (False, None))
 
     @mock.patch("mysql_rep_failover.order_slaves_on_gtid")
     def test_default(self, mock_order):
@@ -131,8 +157,9 @@ class UnitTest(unittest.TestCase):
         mock_order.return_value = self.slaveorder
 
         with gen_libs.no_std_out():
-            self.assertEqual(mysql_rep_failover.show_slave_delays(
-                self.slavearray, self.args_array), (False, None))
+            self.assertEqual(
+                mysql_rep_failover.show_slave_delays(
+                    self.slavearray, self.args), (False, None))
 
 
 if __name__ == "__main__":

@@ -28,6 +28,44 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
 class SlaveRep(object):
 
     """Class:  SlaveRep
@@ -113,6 +151,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args = ArgParser()
+        self.args.args_array = {"-s": "CfgFile", "-d": "CfgDir"}
         self.slave1 = SlaveRep("slave1", "20", True)
         self.slave2 = SlaveRep("slave2", "10", True)
         self.slave3 = SlaveRep("slave3", "15", True)
@@ -120,7 +160,6 @@ class UnitTest(unittest.TestCase):
         self.slavearray.append(self.slave1)
         self.slavearray.append(self.slave2)
         self.slavearray.append(self.slave3)
-        self.args_array = {"-s": "CfgFile", "-d": "CfgDir"}
 
     @mock.patch("mysql_rep_failover.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_failover.mysql_libs.create_slv_array")
@@ -139,8 +178,7 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = []
         mock_trans.return_value = []
 
-        self.assertEqual(mysql_rep_failover.create_instances(
-            self.args_array), [])
+        self.assertEqual(mysql_rep_failover.create_instances(self.args), [])
 
     @mock.patch("mysql_rep_failover.gen_libs.transpose_dict")
     @mock.patch("mysql_rep_failover.mysql_libs.create_slv_array")
@@ -159,8 +197,8 @@ class UnitTest(unittest.TestCase):
         mock_slv.return_value = self.slavearray
         mock_trans.return_value = []
 
-        self.assertEqual(mysql_rep_failover.create_instances(
-            self.args_array), self.slavearray)
+        self.assertEqual(
+            mysql_rep_failover.create_instances(self.args), self.slavearray)
 
 
 if __name__ == "__main__":
