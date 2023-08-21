@@ -297,7 +297,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-
         self.args.dir_perms_chk2 = False
 
         mock_arg.return_value = self.args
