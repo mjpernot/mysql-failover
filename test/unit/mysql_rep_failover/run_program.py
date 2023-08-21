@@ -68,6 +68,44 @@ def show_best_slave(slaves, args_array):
     return status, None
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_args_keys
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+    def get_args_keys(self):
+
+        """Method:  get_args_keys
+
+        Description:  Method stub holder for gen_class.ArgParser.get_args_keys.
+
+        Arguments:
+
+        """
+
+        return list(self.args_array.keys())
+
+
 class SlaveRep(object):
 
     """Class:  SlaveRep
@@ -122,6 +160,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args = ArgParser()
+        self.args2 = ArgParser()
+        self.args.args_array = {"-B": True}
+        self.args2.args_array = {"-D": True}
+
         self.slave1 = SlaveRep("slave1", "20", True)
         self.slave2 = SlaveRep("slave2", "10", True)
         self.slave3 = SlaveRep("slave3", "15", True)
@@ -131,8 +174,6 @@ class UnitTest(unittest.TestCase):
         self.slavearray.append(self.slave3)
         self.func_dict = {"-B": show_best_slave}
         self.func_dict2 = {"-D": show_slave_delays}
-        self.args_array = {"-B": True}
-        self.args_array2 = {"-D": True}
 
     @mock.patch("mysql_rep_failover.gtid_enabled",
                 mock.Mock(return_value=True))
@@ -152,8 +193,8 @@ class UnitTest(unittest.TestCase):
         mock_instance.return_value = self.slavearray
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_failover.run_program(self.args_array2,
-                                                            self.func_dict2))
+            self.assertFalse(
+                mysql_rep_failover.run_program(self.args2, self.func_dict2))
 
     @mock.patch("mysql_rep_failover.gtid_enabled",
                 mock.Mock(return_value=False))
@@ -171,8 +212,8 @@ class UnitTest(unittest.TestCase):
         mock_instance.return_value = self.slavearray
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_failover.run_program(self.args_array,
-                                                            self.func_dict))
+            self.assertFalse(
+                mysql_rep_failover.run_program(self.args, self.func_dict))
 
     @mock.patch("mysql_rep_failover.gtid_enabled",
                 mock.Mock(return_value=True))
@@ -190,8 +231,8 @@ class UnitTest(unittest.TestCase):
         mock_instance.return_value = []
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_rep_failover.run_program(self.args_array,
-                                                            self.func_dict))
+            self.assertFalse(
+                mysql_rep_failover.run_program(self.args, self.func_dict))
 
     @mock.patch("mysql_rep_failover.gtid_enabled",
                 mock.Mock(return_value=True))
@@ -210,8 +251,8 @@ class UnitTest(unittest.TestCase):
 
         mock_instance.return_value = self.slavearray
 
-        self.assertFalse(mysql_rep_failover.run_program(self.args_array,
-                                                        self.func_dict))
+        self.assertFalse(
+            mysql_rep_failover.run_program(self.args, self.func_dict))
 
 
 if __name__ == "__main__":
