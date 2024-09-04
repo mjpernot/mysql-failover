@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.4.2] - 2024-09-04
+- Updated mysql-lib to v5.3.6
+
+### Changed
+- main: Removed parsing from gen_class.ArgParser call and called arg_parse2 as part of "if" statement.
+
+
 ## [2.4.1] - 2024-02-29
 - Updated to work in Red Hat 8
 - Updated python-lib to v3.0.3

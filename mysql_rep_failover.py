@@ -125,7 +125,6 @@ import sys
 
 # Local
 try:
-    from .lib import arg_parser
     from .lib import gen_libs
     from .lib import gen_class
     from .mysql_lib import mysql_libs
@@ -133,7 +132,6 @@ try:
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.arg_parser as arg_parser
     import lib.gen_libs as gen_libs
     import lib.gen_class as gen_class
     import mysql_lib.mysql_libs as mysql_libs
@@ -499,11 +497,12 @@ def main():
                "ssl_verify_id": "bool", "ssl_verify_cert": "bool"}
 
     # Process argument list from command line.
-    args = gen_class.ArgParser(sys.argv, opt_val=opt_val_list, do_parse=True)
+    args = gen_class.ArgParser(sys.argv, opt_val=opt_val_list)
 
-    if not gen_libs.help_func(args, __version__, help_message)  \
-       and args.arg_require(opt_req=opt_req_list)               \
-       and args.arg_xor_dict(opt_xor_val=opt_xor_dict)          \
+    if args.arg_parse2()                                            \
+       and not gen_libs.help_func(args, __version__, help_message)  \
+       and args.arg_require(opt_req=opt_req_list)                   \
+       and args.arg_xor_dict(opt_xor_val=opt_xor_dict)              \
        and args.arg_dir_chk(dir_perms_chk=dir_perms_chk):
 
         try:
