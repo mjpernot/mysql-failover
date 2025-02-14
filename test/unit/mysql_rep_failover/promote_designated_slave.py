@@ -22,13 +22,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_rep_failover
-import version
+import mysql_rep_failover                       # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -51,7 +51,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def get_val(self, skey, def_val=None):
 
@@ -66,7 +66,7 @@ class ArgParser(object):
         return self.args_array.get(skey, def_val)
 
 
-class MasterRep(object):
+class MasterRep():                                      # pylint:disable=R0903
 
     """Class:  MasterRep
 
@@ -91,7 +91,7 @@ class MasterRep(object):
         self.conn_msg = None
 
 
-class SlaveRep(object):
+class SlaveRep():                                       # pylint:disable=R0903
 
     """Class:  SlaveRep
 
@@ -207,8 +207,8 @@ class UnitTest(unittest.TestCase):
             "Slaves: ['slave2', 'slave3'] that did not change to new master."
         self.results2 = "Slaves: ['slave2'] that did not change to new master."
         self.results3 = "Slave: slave0 was not found in slave array"
-        self.results4 = "promote_designated_slave: Error on server(%s):  %s " \
-            % ("MySQL_Name", "Error")
+        self.results4 = \
+            "promote_designated_slave: Error on server MySQL_Name: Error "
         self.results4 = self.results4 + "No slaves were changed to new master."
 
     @mock.patch("mysql_rep_failover.convert_to_master")
