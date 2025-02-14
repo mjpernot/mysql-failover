@@ -22,13 +22,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_rep_failover
-import version
+import mysql_rep_failover                       # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -50,10 +50,10 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
 
-class MasterRep(object):
+class MasterRep():                                      # pylint:disable=R0903
 
     """Class:  MasterRep
 
@@ -78,7 +78,7 @@ class MasterRep(object):
         self.conn_msg = None
 
 
-class SlaveRep(object):
+class SlaveRep():
 
     """Class:  SlaveRep
 
@@ -87,6 +87,7 @@ class SlaveRep(object):
     Methods:
         __init__
         remove
+        append
 
     """
 
@@ -183,8 +184,8 @@ class UnitTest(unittest.TestCase):
         self.results = \
             "Slaves: ['slave3', 'slave1'] that did not change to new master."
         self.results2 = "Slaves: ['slave3'] that did not change to new master."
-        self.results4 = "promote_best_slave: Error on server(%s):  %s " \
-            % ("MySQL_Name", "Error")
+        self.results4 = \
+            "promote_best_slave: Error on server MySQL_Name:  Error "
         self.results4 = self.results4 + "No slaves were changed to new master."
 
     @mock.patch("mysql_rep_failover.convert_to_master")

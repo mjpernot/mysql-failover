@@ -20,10 +20,7 @@
 
     Usage:
         mysql_rep_failover.py -s [path]file -d path
-            {-F |
-             -G name |
-             -B |
-             -D}
+            {-F | -G name | -B | -D}
             [-y flavor_id] [-v | -h]
 
     Arguments:
@@ -117,8 +114,6 @@
 """
 
 # Libraries and Global Variables
-from __future__ import print_function
-from __future__ import absolute_import
 
 # Standard
 import sys
@@ -132,10 +127,10 @@ try:
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.gen_libs as gen_libs
-    import lib.gen_class as gen_class
-    import mysql_lib.mysql_libs as mysql_libs
-    import mysql_lib.mysql_class as mysql_class
+    import lib.gen_libs as gen_libs                     # pylint:disable=R0402
+    import lib.gen_class as gen_class                   # pylint:disable=R0402
+    import mysql_lib.mysql_libs as mysql_libs           # pylint:disable=R0402
+    import mysql_lib.mysql_class as mysql_class         # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
@@ -155,7 +150,7 @@ def help_message():
     print(__doc__)
 
 
-def show_slave_delays(slaves, args, **kwargs):
+def show_slave_delays(slaves, args, **kwargs):          # pylint:disable=W0613
 
     """Function:  show_slave_delays
 
@@ -177,15 +172,15 @@ def show_slave_delays(slaves, args, **kwargs):
     slaves = list(slaves)
     slave_list = order_slaves_on_gtid(slaves)
     gtid, slv = slave_list.pop(0)
-    print("Best Slave: {0}\tGTID Pos: {1}".format(slv.name, gtid))
+    print(f"Best Slave: {slv.name}\tGTID Pos: {gtid}")
 
     for gtid, slv in slave_list:
-        print("     Slave: {0}\tGTID Pos: {1}".format(slv.name, gtid))
+        print(f"     Slave: {slv.name}\tGTID Pos: {gtid}")
 
     return err_flag, err_msg
 
 
-def show_best_slave(slaves, args, **kwargs):
+def show_best_slave(slaves, args, **kwargs):            # pylint:disable=W0613
 
     """Function:  show_best_slave
 
@@ -205,7 +200,7 @@ def show_best_slave(slaves, args, **kwargs):
     err_msg = None
     slaves = list(slaves)
     _, best_slv = order_slaves_on_gtid(slaves).pop(0)
-    print("Best Slave: %s" % (best_slv.name))
+    print(f"Best Slave: {best_slv.name}")
 
     return err_flag, err_msg
 
@@ -243,9 +238,9 @@ def promote_designated_slave(slaves, args, **kwargs):
 
         if master.conn_msg:
             err_flag = True
-            err_msg = "promote_designated_slave: Error on server(%s):  %s " % \
-                (master.name, master.conn_msg)
-            err_msg = err_msg + "No slaves were changed to new master."
+            err_msg = \
+                f"promote_designated_slave: Error on server {master.name}:" \
+                f" {master.conn_msg} No slaves were changed to new master."
 
         else:
             for slv in slaves:
@@ -256,15 +251,14 @@ def promote_designated_slave(slaves, args, **kwargs):
                     bad_slv.append(slv.name)
 
             if err_flag:
-                err_msg = "Slaves: %s that did not change to new master." \
-                    % (bad_slv)
+                err_msg = \
+                    f"Slaves: {bad_slv} that did not change to new master."
 
             mysql_libs.disconnect(master)
 
     else:
         err_flag = True
-        err_msg = "Slave: %s was not found in slave array" % \
-                  (args.get_val("-G"))
+        err_msg = f'Slave: {args.get_val("-G")} was not found in slave array'
 
     return err_flag, err_msg
 
@@ -361,9 +355,9 @@ def promote_best_slave(slaves, args, **kwargs):
 
     if master.conn_msg:
         err_flag = True
-        err_msg = "promote_best_slave: Error on server(%s):  %s " % \
-            (master.name, master.conn_msg)
-        err_msg = err_msg + "No slaves were changed to new master."
+        err_msg = \
+            f"promote_best_slave: Error on server {master.name}:" \
+            f"  {master.conn_msg} No slaves were changed to new master."
 
     else:
         for _, slv in slave_list:
@@ -374,8 +368,8 @@ def promote_best_slave(slaves, args, **kwargs):
                 bad_slv.append(slv.name)
 
         if err_flag:
-            err_msg = "Slaves: %s that did not change to new master." % \
-                      (bad_slv)
+            err_msg = \
+                f"Slaves: {bad_slv} that did not change to new master."
 
         mysql_libs.disconnect(master)
 
@@ -512,8 +506,8 @@ def main():
             del prog_lock
 
         except gen_class.SingleInstanceException:
-            print("WARNING:  Lock in place for mysql_rep_failover with id: %s"
-                  % (args.get_val("-y", def_val="")))
+            print(f'WARNING:  Lock in place for mysql_rep_failover with id:'
+                  f' {args.get_val("-y", def_val="")}')
 
 
 if __name__ == "__main__":

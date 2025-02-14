@@ -21,13 +21,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_rep_failover
-import version
+import mysql_rep_failover                       # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -50,7 +50,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def get_val(self, skey, def_val=None):
 
@@ -65,7 +65,7 @@ class ArgParser(object):
         return self.args_array.get(skey, def_val)
 
 
-class MasterRep(object):
+class MasterRep():                                      # pylint:disable=R0903
 
     """Class:  MasterRep
 
@@ -77,7 +77,8 @@ class MasterRep(object):
 
     """
 
-    def __init__(self, name, server_id, sql_user, sql_pass, machine, **kwargs):
+    def __init__(                                       # pylint:disable=R0913
+            self, name, server_id, sql_user, sql_pass, machine, **kwargs):
 
         """Method:  __init__
 
@@ -124,7 +125,7 @@ class MasterRep(object):
         return True
 
 
-class SlaveRep(object):
+class SlaveRep():                                       # pylint:disable=R0903
 
     """Class:  SlaveRep
 
@@ -135,7 +136,8 @@ class SlaveRep(object):
 
     """
 
-    def __init__(self, name, server_id, sql_user, sql_pass, machine, **kwargs):
+    def __init__(                                       # pylint:disable=R0913
+            self, name, server_id, sql_user, sql_pass, machine, **kwargs):
 
         """Method:  __init__
 
@@ -234,7 +236,7 @@ class UnitTest(unittest.TestCase):
 
         master = mysql_rep_failover.convert_to_master(self.slave, self.args)
 
-        self.assertTrue(isinstance(master, MasterRep))
+        self.assertIsInstance(master, MasterRep)
 
 
 if __name__ == "__main__":
