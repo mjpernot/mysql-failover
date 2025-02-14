@@ -21,13 +21,13 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_rep_failover
-import version
+import mysql_rep_failover                       # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class SlaveRep(object):
+class SlaveRep():
 
     """Class:  SlaveRep
 
@@ -36,6 +36,7 @@ class SlaveRep(object):
     Methods:
         __init__
         remove
+        append
 
     """
 
