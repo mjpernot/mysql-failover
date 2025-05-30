@@ -4,7 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
-## [3.0.0[ - 2025-02-14
+## [3.0.1] - 2025-05-30
+- Updated python-lib to v4.0.1
+- Updated mysql-lib to v5.5.1
+- Removed support for MySQL 5.6/5.7
+
+### Changed
+- Documentation changes.
+
+
+## [3.0.0] - 2025-02-14
 Breaking Changes
 
 - Removed support for Python 2.7.
@@ -12,6 +21,7 @@ Breaking Changes
 - Updated python-lib v4.0.0
 
 ### Changed
+- dump_db: Added 'encoding' to open() call.
 - Converted strings to f-strings.
 - Documentation changes.
 
