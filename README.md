@@ -91,8 +91,8 @@ Create a MySQL slave configuration file.  Make the appropriate change to the env
 
 ```
 cp config/slave.txt.TEMPLATE config/slave.txt
-vim config/slave.txt
 chmod 600 config/slave.txt
+vim config/slave.txt
 ```
 
 Create MySQL definition file.  Make the appropriate change to the MySQL definition setup.
@@ -103,8 +103,8 @@ Create MySQL definition file.  Make the appropriate change to the MySQL definiti
 
 ```
 cp config/mysql.cfg.TEMPLATE config/mysql.cfg
-vim config/mysql.cfg
 chmod 600 config/mysql.cfg
+vim config/mysql.cfg
 ```
 
 
